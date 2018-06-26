@@ -11,7 +11,7 @@ virtualenv --python=python3 env
 git clone git@github.com:rexzing/kolomthota_server.git
 
 source env/bin/activate
-pip install -r kolomthota_server/requirements.txt
+pip install -r kolomthota_server/requirments.txt
 
-echo "Pls setup the local_settings.py at kolomthota_server/ using the sample in kolomthota_server/local_settings.py.example"
+echo "Pls setup the local.py at kolomthota_server/ using the sample in kolomthota_server/settings/example.local.py"
 

@@ -1,3 +1,9 @@
 .idea/
-kolomthota_server/local_settings.py
-kolomthota_server/__pycache__/
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+db.sqlite3
+local.py
+
+
