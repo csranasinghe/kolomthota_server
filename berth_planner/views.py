@@ -1,6 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
-# Create your views here.
-def login(request):
-    return render(request, 'berth_planner/login.html', {"name": "chamath"})
+class Login(TemplateView):
+    template_name = 'berth_planner/login.html'
+
+
+def index(request):
+    return HttpResponse("<h1>Index page</h1")
