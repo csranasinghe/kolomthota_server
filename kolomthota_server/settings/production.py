@@ -25,7 +25,7 @@ SECRET_KEY = '2b0ri6*==$au%71buizn6vg!8e819m(0-=^6(co_-zl)c!x^!r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['kolomthota_server.herokuapp.com']
+ALLOWED_HOSTS = ['kolomthota.herokuapp.com']
 
 
 # Application definition
