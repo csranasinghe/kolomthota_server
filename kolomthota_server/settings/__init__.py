@@ -1,8 +1,8 @@
-from .base import *
+from .base import get_config
 
-from .production import *
-
-try:
+if get_config('SERVER_TYPE') == 'local':
     from .local import *
-except:
-    pass
+elif get_config('SERVER_TYPE') == 'production':
+    from .production import *
+else:
+    from .base import *

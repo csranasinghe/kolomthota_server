@@ -1,8 +1,10 @@
 from .base import *
 
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_config('SECRET_KEY')
 
-DEBUG = False
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
 
 ALLOWED_HOSTS = get_config('ALLOWED_HOSTS')
 
