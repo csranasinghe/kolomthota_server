@@ -1,11 +1,12 @@
 import os
 import json
+import logging.config
 
 from django.core.exceptions import ImproperlyConfigured
 
 
 try:
-    with open('configs.json') as f:
+    with open(os.path.dirname(os.path.abspath(__file__))+'/configs.json') as f:
         configs = json.loads(f.read())
 except FileNotFoundError:
     error_msg = 'configs.json file not found.'
@@ -42,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'berth_planner'
+    'accounts',
+    'berth_planner',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,7 @@ ROOT_URLCONF = 'kolomthota_server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,6 +85,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Custom user model
+AUTH_USER_MODEL = 'accounts.Account'
 
 
 # Password validation
@@ -120,3 +125,65 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+
+# logging
+LOGGING_CONFIG = None
+LOG_CONFIGS = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s : [%(name)s.%(funcName)s:%(lineno)d] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'kolomthota_log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR+'/logs', 'kolomthota_server.log'),
+            'maxBytes' : 1024*1024*100, # 100MB
+            'formatter': 'verbose',
+            'backupCount': 10,
+        }
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['console', 'kolomthota_log'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'django.request': {
+            'handlers': ['console', 'kolomthota_log'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'django': {
+            'handlers': ['console', 'kolomthota_log'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        '': {
+            'handlers': ['console', 'kolomthota_log'],
+            'level': 'ERROR',
+            'propagate': True,
+        }
+    }
+
+}
+logging.config.dictConfig(LOG_CONFIGS)

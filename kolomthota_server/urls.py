@@ -18,5 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url('^', include('berth_planner.urls')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^', include('berth_planner.urls')),
+
 ]
