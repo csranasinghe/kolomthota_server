@@ -27,7 +27,7 @@
                                 {{ alert_message }} <button type="button" class="close" data-dismiss="alert">&times;</button>
                             </div>
                             {% endif %}
-                            {% if form.has_errors or alert_message %}
+                            {% if form.has_error or alert_message %}
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 {{ form.errors|default_if_none:"Invalid username or password" }}.<button type="button" class="close" data-dismiss="alert">&times;</button>
                             </div>

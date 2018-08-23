@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, reverse
 
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def login_view(request):
     template = 'accounts/login.html'
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse('accounts:index'))
     if request.method == 'GET':
         form = AuthenticationForm()
         return render(request, template, {'form': form})
@@ -23,13 +23,19 @@ def login_view(request):
             if user is not None:
                 logging.info("User "+username+" authenticated.")
                 login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect(reverse('accounts:index'))
             else:
                 logging.info("User " + username + " authenticated.")
         else:
-            return render(request, template, {'form': form})
+            return render(request, template, {'form': form, 'errors': {}})
 
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse('accounts:login'))
+    return HttpResponse("Logged out")
+
+
+def index_view(request):
+    # return HttpResponse("Accouonts index")
+
+    return HttpResponseRedirect(reverse('berth_planner:index'))

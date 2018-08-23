@@ -2,24 +2,25 @@
 {% load static %}
 {% block header %}
     {% block navbar %}
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{% url "accounts:index" %}">
                 <img src="{% static "img/logo.png" %}" width="30" height="30" class="d-inline-block align-top mr-3" alt="">
                 Kolomthota
             </a>
              <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown">
+              <li class="nav-item dropdown">
+                  <a class="nav-link" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="inset">
-
                   <img src="{% static "img/default-avatar.png" %}">
-
+                </div>
+                      </a>
+                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                       <a class="dropdown-item" href="{% url "accounts:logout" %}">Logout</a>
                 </div>
               </li>
             </ul>
-
         </div>
-
     </nav>
         {% endblock navbar %}
 {% endblock header %}
@@ -44,6 +45,10 @@
   position: relative;
   z-index: 998;
 }
+    .navbar-brand{
+        font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+        font-size: 1.5rem;
+    }
     </style>
 {% endblock extra_head %}
 {% include 'snippets/navbar_js.html' %}

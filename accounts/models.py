@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Account(AbstractUser):
@@ -25,6 +27,15 @@ class BerthPlanner(models.Model):
         return str(self.account)
 
 
+@receiver(post_save, sender=Account)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        if instance.user_type == 'BP':
+            BerthPlanner.objects.create(account=instance)
+
+@receiver(post_save, sender=Account)
+def save_user_profile(sender, instance, **kwargs):
+    instance.account.save()
 
 
 

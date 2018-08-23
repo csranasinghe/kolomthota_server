@@ -169,7 +169,7 @@ LOG_CONFIGS = {
             'level': 'DEBUG',
         },
         'django.request': {
-            'handlers': ['console', 'kolomthota_log'],
+            'handlers': ['console'],
             'propagate': True,
             'level': 'DEBUG',
         },
