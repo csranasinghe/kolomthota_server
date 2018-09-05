@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'accounts',
     'berth_planner',
     'shipping_line',
-    'mobile_api'
+    'mobile_api',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

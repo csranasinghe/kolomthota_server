@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^berth-planner/', include('berth_planner.urls', namespace="berth_planner")),
     url(r'^shipping-line/', include('shipping_line.urls', namespace="shipping_line")),
+    url(r'^api/', include('mobile_api.urls', namespace="api")),
 
 ]
