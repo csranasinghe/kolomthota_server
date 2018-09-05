@@ -1,4 +1,7 @@
 {% extends 'base_navbar.html' %}
+{% load static %}
 
-  {% block content_main %}
-       {% endblock content_main %}
+{% block content_main %}
+    <a href="{% url "berth_planner:schedule_published" %}">published schedule</a>
+
+{% endblock content_main %}

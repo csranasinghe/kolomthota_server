@@ -1,0 +1,48 @@
+.sub-ves-tbl .main {
+        background-color: #ccffcc;
+    }
+
+  .feeder {
+        background-color: #ffcccc;
+    }
+ .sub-ves-tbl   .row {
+        margin-top: 20px;
+    }
+.sub-ves-tbl    p {
+        font-weight: bolder;
+        text-align: center;
+    }
+ .sub-ves-tbl   h3 {
+        font-weight: bolder;
+        text-align: center;
+    }
+.sub-ves-tbl    h5 {
+        font-weight: bolder;
+        text-align: center;
+    }
+ .sub-ves-tbl   .row2 {
+        margin: 10px;
+        color: #000000;
+        font-weight: bolder;
+        font-size: 15px;
+    }
+ .sub-ves-tbl   .row3 {
+        background: #fee6c6;
+        color: #000;
+        font-weight: bold;
+        padding: 5px;
+        text-align: center;
+    }
+ .sub-ves-tbl   .row4{
+        padding: 15px 0;
+        color: #000099;
+        font-weight: bold;
+    }
+  .sub-ves-tbl  thead{
+        background-color: #002166;
+        color: #FFFFFF
+    }
+ .sub-ves-tbl   .datetab{
+        color: #0000cc;
+        font-weight: bolder
+    }

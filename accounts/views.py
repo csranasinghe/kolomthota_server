@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 from django.shortcuts import render, reverse
 
 import logging
@@ -16,19 +17,19 @@ def login_view(request):
         form = AuthenticationForm()
         return render(request, template, {'form': form})
     if request.method == 'POST':
-        form = AuthenticationForm(request=request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
                 logging.info("User "+username+" authenticated.")
                 login(request, user)
                 return HttpResponseRedirect(reverse('accounts:index'))
             else:
-                logging.info("User " + username + " authenticated.")
+                messages.error(request, 'Your account has been disabled.')
         else:
-            return render(request, template, {'form': form, 'errors': {}})
+            messages.add_message(request, messages.INFO, 'Invalid username or password.')
+        return render(request, template, {})
 
 
 def logout_view(request):
@@ -36,7 +37,7 @@ def logout_view(request):
     return HttpResponse("Logged out")
 
 
-@login_required
+@login_required()
 def index_view(request):
     # return HttpResponse("Accouonts index")
     u = request.user
@@ -44,3 +45,6 @@ def index_view(request):
         return HttpResponseRedirect(reverse('shipping_line:index'))
     elif request.user.user_type == 'BP':
         return HttpResponseRedirect(reverse('berth_planner:index'))
+    elif request.user.user_type == 'ADMIN':
+        return HttpResponseRedirect(reverse('admin:index'))
+

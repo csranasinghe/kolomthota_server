@@ -19,13 +19,12 @@ class VesselDetails(models.Model):
     shipping_agent = models.ForeignKey('accounts.ShippingAgent', on_delete=models.PROTECT)
 
     eta = models.DateTimeField()
-    etb = models.DateTimeField()
 
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
 
-    loa_val = models.IntegerField()
+    loa_val = models.DecimalField(max_digits=6, decimal_places=2)
     vessel_status = models.CharField(choices=VESSEL_STATUS_CHOICES,  max_length=2)
 
     ref_no = models.CharField(max_length=100, unique=True)
@@ -33,9 +32,10 @@ class VesselDetails(models.Model):
     draft_departure = models.DecimalField(max_digits=4, decimal_places=2)
     remarks = models.TextField(null=True, blank=True)
 
-    etc = models.DateTimeField()
+    service = models.CharField(max_length=100, blank=True)
 
-    service = models.CharField(max_length=100)
+    last_port = models.CharField(max_length=100, default='')
+    next_port = models.CharField(max_length=100, default='')
 
     modified_time = models.DateTimeField(auto_now_add=True)
     created_time = models.DateTimeField(auto_now=True)
@@ -43,8 +43,6 @@ class VesselDetails(models.Model):
     first_confirm = models.BooleanField(default=False)
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
-
-    is_at_berth = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Vessel Details'
