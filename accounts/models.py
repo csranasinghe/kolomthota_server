@@ -19,7 +19,7 @@ class Account(AbstractUser):
 
 class BerthPlanner(models.Model):
     account = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                   related_name='account',
+                                   related_name='bp_account',
                                    on_delete=models.CASCADE,
                                    primary_key=True)
 
@@ -27,15 +27,28 @@ class BerthPlanner(models.Model):
         return str(self.account)
 
 
-@receiver(post_save, sender=Account)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        if instance.user_type == 'BP':
-            BerthPlanner.objects.create(account=instance)
+class ShippingAgent(models.Model):
+    account = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                   related_name='sa_account',
+                                   on_delete=models.CASCADE,
+                                   primary_key=True)
+    shipping_line = models.ForeignKey('shipping_line.ShippingLine',
+                                      on_delete=models.CASCADE,
+                                      blank=True, default='')
+    is_active_agent = models.BooleanField(default=False)
 
-@receiver(post_save, sender=Account)
-def save_user_profile(sender, instance, **kwargs):
-    instance.account.save()
+    def __str__(self):
+        return str(self.account)
 
 
-
+# # TODO: Add proper post_save signal handling
+# @receiver(post_save, sender=Account)
+# def create_or_update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         if instance.user_type == 'BP':
+#             BerthPlanner.objects.create(bp_account=instance)
+#         elif instance.user_type == 'SA':
+#             ShippingAgent.objects.create(sa_account=instance)
+#     else:
+#         instance.account.save()
+#

@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'berth_planner',
+    'shipping_line',
+    'mobile_api'
 ]
 
 MIDDLEWARE = [

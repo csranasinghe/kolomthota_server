@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, reverse
@@ -35,7 +36,11 @@ def logout_view(request):
     return HttpResponse("Logged out")
 
 
+@login_required
 def index_view(request):
     # return HttpResponse("Accouonts index")
-
-    return HttpResponseRedirect(reverse('berth_planner:index'))
+    u = request.user
+    if request.user.user_type == 'SA':
+        return HttpResponseRedirect(reverse('shipping_line:index'))
+    elif request.user.user_type == 'BP':
+        return HttpResponseRedirect(reverse('berth_planner:index'))
