@@ -1,6 +1,37 @@
 {% extends 'base_navbar.html' %}
 
   {% block content_main %}
-      <h3>Hello shiping agent</h3>
+    <br/>
+    <div class="row" >
+        <div class="col-sm-3">
+            <h3 style=" text-align: center"></h3>>Hello shiping agent</h3>
+        </div>
+        <div class="col-sm-6" style="height:auto;border-left-style: solid;border-right-style: solid">
+            <h1 style=" text-align: center">Vessel Details</h1>
+            <ul>
+            {% for obj in object_list %}
+                <div class="card bg-secondary text-white">
+                    <div class="card-header">{{obj.vessel_name}} </div>
+                    <div class="card-body">
+                        <li>{{obj.eta}}</li> 
+                    </div>
+                </div>
+                <br/>
+            {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="col-sm-3" >
+            <div class="jumbotron" >
+                <a class="btn btn-info" role="button" href="{% url "shipping_line:addVessel" %}">
+                    Add Ship
+                </a>
+            </div>
+        </div>
+    </div> 
+     
+ 
+     
+
   {% endblock content_main %}
 
