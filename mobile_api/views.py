@@ -1,11 +1,19 @@
-from django.shortcuts import render
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.request import Request
-# Create your views here.
+from rest_framework.viewsets import ModelViewSet
+from shipping_line.models import Vessel, VesselArrival
+from .serializers import VesselSerializer, VesselArrivalSerializer
 
 
-@api_view(['POST'])
-def vessel_details(request):
-    return Response(data={'msg': "Saved successfully."}, status=status.HTTP_200_OK)
+class VesselViewSet(ModelViewSet):
+    """
+    A model viewset for viewing and editing Vessel instances.
+    """
+    serializer_class = VesselSerializer
+    queryset = Vessel.objects.all()
+
+
+class VesselArrivalViewSet(ModelViewSet):
+    """
+    A model viewset for viewing and editing Vessel Arrival instances.
+    """
+    serializer_class = VesselArrivalSerializer
+    queryset = VesselArrival.objects.all()
