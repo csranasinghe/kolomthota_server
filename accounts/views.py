@@ -37,7 +37,7 @@ def logout_view(request):
     return HttpResponse("Logged out")
 
 
-@login_required()
+@login_required
 def index_view(request):
     # return HttpResponse("Accouonts index")
     u = request.user

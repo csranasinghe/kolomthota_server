@@ -1,26 +1,16 @@
 from django.forms import ModelForm  
-from .models import ShippingLine,VesselDetails
+from .models import ShippingLine,VesselArrival
 
-class VesselDetailsForm(ModelForm):
+
+class VesselArrivalDetailsForm(ModelForm):
     class Meta:
-        model = VesselDetails
-        fields = [
-            'vessel_name',
-            'shipping_agent',
-            'eta',
-            'dis',
-            'load',
-            'total',
-            'loa_val',
-            'vessel_status',
-            'ref_no',
-            'draft_arrival',
-            'draft_departure',
-            'remarks',
-            'service',
-            'last_port',
-            'next_port'
-
+        model = VesselArrival
+        exclude = [
+            'first_confirm',
+            'second_confirm',
+            'third_confirm',
+            'modified_time',
+            'created_time'
         ]
 
 

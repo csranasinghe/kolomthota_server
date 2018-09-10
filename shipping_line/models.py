@@ -10,22 +10,35 @@ class ShippingLine(models.Model):
         return str(self.name)
 
 
-class VesselDetails(models.Model):
+class Vessel(models.Model):
     VESSEL_STATUS_CHOICES = (
         ('M', 'Main Line'),
         ('F', 'Feeder Line'),
     )
     vessel_name = models.CharField(max_length=200)
+    _loa = models.DecimalField(max_digits=6, decimal_places=2)
+    vessel_status = models.CharField(choices=VESSEL_STATUS_CHOICES,  max_length=2)
+
+    def __str__(self):
+        return str(self.vessel_name)
+
+    @property
+    def loa(self):
+        return str(self._loa) + 'M'
+
+    class Meta:
+        verbose_name = 'Vessel'
+        verbose_name_plural = 'Vessels'
+
+
+class VesselArrival(models.Model):
+
     shipping_agent = models.ForeignKey('accounts.ShippingAgent', on_delete=models.PROTECT)
 
     eta = models.DateTimeField(null=True, blank=True)
 
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
-    total = models.IntegerField(default=0)
-
-    loa_val = models.DecimalField(max_digits=6, decimal_places=2)
-    vessel_status = models.CharField(choices=VESSEL_STATUS_CHOICES,  max_length=2)
 
     ref_no = models.CharField(max_length=100, unique=True)
     draft_arrival = models.DecimalField(max_digits=4, decimal_places=2)
@@ -44,21 +57,25 @@ class VesselDetails(models.Model):
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
 
+    vessel = models.OneToOneField('Vessel', on_delete=models.DO_NOTHING)
+
     class Meta:
         verbose_name = 'Vessel Details'
         verbose_name_plural = 'Vessel Details'
         ordering = ['eta']
 
     def __str__(self):
-        return str(self.vessel_name)
+        return str(self.vessel.vessel_name)
 
     @property
     def shipping_line(self):
         return self.shipping_agent.shipping_line
 
     @property
-    def loa(self):
-        return str(self.loa_val) + 'M'
+    def total(self):
+        return self.dis + self.load
+
+
 
 
 
