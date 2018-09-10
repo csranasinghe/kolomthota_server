@@ -17,7 +17,10 @@ class VesselDetailsForm(ModelForm):
             'draft_arrival',
             'draft_departure',
             'remarks',
-            'service'
+            'service',
+            'last_port',
+            'next_port'
+
         ]
 
 

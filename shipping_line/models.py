@@ -18,7 +18,7 @@ class VesselDetails(models.Model):
     vessel_name = models.CharField(max_length=200)
     shipping_agent = models.ForeignKey('accounts.ShippingAgent', on_delete=models.PROTECT)
 
-    eta = models.DateTimeField()
+    eta = models.DateTimeField(null=True, blank=True)
 
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)

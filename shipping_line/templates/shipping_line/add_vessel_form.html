@@ -28,10 +28,12 @@
             <li>{{form.draft_arrival.label_tag}}  {{form.draft_arrival}}</li>        
             <li>{{form.draft_departure.label_tag}}  {{form.draft_departure}}</li>
             <li>{{form.remarks.label_tag}}  {{form.remarks}}</li>
-            <li>{{form.service.label_tag}}  {{form.service}}</li>      
+            <li>{{form.service.label_tag}}  {{form.service}}</li>   
+            <li>{{form.last_port.label_tag}}  {{form.last_port}}</li>
+            <li>{{form.next_port.label_tag}}  {{form.next_port}}</li>     
             </ul>
-            <button type="submit" value="Save">Submit</button>
-       
+            <button type="submit" class="btn btn-info" value="Save">Submit</button>
+            <a class="btn btn-info" role="button" href="{% url "shipping_line:index" %}">Go back</a>
         </form>
     </div>
     <div class="col-sm-2"></div>
