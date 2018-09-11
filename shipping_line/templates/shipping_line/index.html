@@ -3,33 +3,25 @@
   {% block content_main %}
     <br/>
     <div class="row" >
-        <div class="col-sm-3">
-            <h3 style=" text-align: center"></h3>>Hello shiping agent</h3>
+            <a class="btn btn-info" role="button" href="{% url "shipping_line:berthSchedule" %}">
+                Go to Berth Schedule
+            </a>
+          
+            <a class="btn btn-info" role="button" href="{% url "shipping_line:viewHistory" %}">
+                Go to History
+            </a>
+      
         </div>
-        <div class="col-sm-6" style="height:auto;border-left-style: solid;border-right-style: solid">
-            <h1 style=" text-align: center">Vessel Details</h1>
-            <ul>
-            {% for obj in object_list %}
-                <div class="card bg-secondary text-white">
-                    <div class="card-header">{{obj.vessel_name}} </div>
-                    <div class="card-body">
-                        <li>{{obj.eta}}</li> 
-                    </div>
-                </div>
-                <br/>
-            {% endfor %}
-            </ul>
+        <div class="row" >
+        <div class="col-sm-12" style="height:auto;border-left-style: solid;border-right-style: solid">
+            {% block content_middle %}
+            
+            {% endblock content_middle %}
         </div>
-        
-        <div class="col-sm-3" >
-            <div class="jumbotron" >
-                <a class="btn btn-info" role="button" href="{% url "shipping_line:addVessel" %}">
-                    Add Ship
-                </a>
-            </div>
-        </div>
-    </div> 
-     
+    </div>
+   
+   
+</div>
  
      
 

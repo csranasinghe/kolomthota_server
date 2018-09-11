@@ -1,7 +1,8 @@
 from django.conf.urls import url, include
-from .views import index,addVessel,add_vessel_details,vessel_listview
+from .views import vessel_listview,berth_schedule,view_history
 
 urlpatterns = [
-    url('^$', vessel_listview, name="index"),
-    url('^vessel-details/$', add_vessel_details, name="addVessel"),  
+    url('^$', vessel_listview, name="index"), 
+    url('^berth-schedule/$', berth_schedule, name="berthSchedule"),
+    url('^history/$', view_history, name="viewHistory"),
 ]

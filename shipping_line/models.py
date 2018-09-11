@@ -35,7 +35,7 @@ class VesselArrival(models.Model):
 
     shipping_agent = models.ForeignKey('accounts.ShippingAgent', on_delete=models.PROTECT)
 
-    eta = models.DateTimeField()
+    eta = models.DateTimeField(null=True, blank=True)
 
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
@@ -53,6 +53,8 @@ class VesselArrival(models.Model):
     modified_time = models.DateTimeField(auto_now_add=True)
     created_time = models.DateTimeField(auto_now=True)
 
+    is_reviewed = models.BooleanField(default=False)
+    
     first_confirm = models.BooleanField(default=False)
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
