@@ -14,10 +14,18 @@ def add_vessel_details(request):
     return render( request,'shipping_line/add_vessel_form.html', {'form':form})
 
 def vessel_listview(request):
+    if request.method == "POST":
+         form = VesselArrivalDetailsForm(request.POST)
+         if form.is_valid():
+             vessel_Detail_item = form.save(commit=False)
+             vessel_Detail_item.save()
+    else:
+        form = VesselArrivalDetailsForm()
     template_name='shipping_line/vessel_details.html'
-    queryset = VesselDetails.objects.all()
+    queryset = VesselArrival.objects.all()
     context = {
-        "object_list":queryset
+        "object_list":queryset,
+        'form':form
     }
     return render(request, template_name ,context)
 
@@ -30,7 +38,7 @@ def berth_schedule(request):
 
 def view_history(request):
     template_name='shipping_line/history.html'
-    queryset = VesselDetails.objects.all()
+    queryset = VesselArrival.objects.all()
     context = {
         "object_list":queryset
     }
