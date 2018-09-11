@@ -1,6 +1,7 @@
 import os
 import json
 import logging.config
+import datetime
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -126,7 +127,8 @@ USE_L10N = True
 USE_TZ = True
 
 LOGIN_URL = 'accounts:login'
-
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -197,3 +199,24 @@ LOG_CONFIGS = {
 
 }
 logging.config.dictConfig(LOG_CONFIGS)
+# Django REST-framekwork
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# Django REST-framekwork JWT authentication
+JWT_AUTH = {
+
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+
+}

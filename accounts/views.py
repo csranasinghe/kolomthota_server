@@ -1,50 +1,48 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth import authenticate
+from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.shortcuts import render, reverse
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.generic import CreateView
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-def login_view(request):
-    template = 'accounts/login.html'
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('accounts:index'))
-    if request.method == 'GET':
-        form = AuthenticationForm()
-        return render(request, template, {'form': form})
-    if request.method == 'POST':
+class AccountLoginView(LoginView):
+    template_name = 'accounts/login.html'
+    form_class = AuthenticationForm
+
+    def post(self, request, *args, **kwargs):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
-                logging.info("User "+username+" authenticated.")
-                login(request, user)
-                return HttpResponseRedirect(reverse('accounts:index'))
+                logging.info("User " + username + " authenticated.")
             else:
                 messages.error(request, 'Your account has been disabled.')
         else:
             messages.add_message(request, messages.INFO, 'Invalid username or password.')
-        return render(request, template, {})
+        return super(AccountLoginView, self).post(request)
 
 
-def logout_view(request):
-    logout(request)
-    return HttpResponse("Logged out")
+class IndexView(LoginRequiredMixin, View):
 
+    def get(self, request):
+        user = request.user
+        if user.user_type == 'SA':
+            return HttpResponseRedirect(reverse('shipping_line:index'))
+        elif user.user_type == 'BP':
+            return HttpResponseRedirect(reverse('berth_planner:index'))
+        elif user.user_type == 'ADMIN':
+            return HttpResponseRedirect(reverse('admin:index'))
 
-@login_required
-def index_view(request):
-    # return HttpResponse("Accouonts index")
-    u = request.user
-    if request.user.user_type == 'SA':
-        return HttpResponseRedirect(reverse('shipping_line:index'))
-    elif request.user.user_type == 'BP':
-        return HttpResponseRedirect(reverse('berth_planner:index'))
-    elif request.user.user_type == 'ADMIN':
-        return HttpResponseRedirect(reverse('admin:index'))
-
+#
+# class RegisterSLAView(CreateView):
+#     form_class = UserCreationForm
+#     success_url = reverse_lazy('login')
+#     template_name = 'signup.html'
