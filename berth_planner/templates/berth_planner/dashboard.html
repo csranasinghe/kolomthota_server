@@ -1,5 +1,58 @@
 {% extends 'base_navbar.html' %}
 
   {% block content_main %}
+ 
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notReviewedList">
+    Notifications <span class="badge badge-light">{{object_list}}</span>
+  </button>
+
+  <div class="modal" id="notReviewedList">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Modal Heading</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          {% for obj in object_list_data %}
+          <td>{{obj.shipping_agent}}</td>
+          <td>{{obj.eta}}</td>
+          <td>{{obj.dis}}</td>
+          <td>{{obj.load}}</td>
+          <td>{{obj.ref_no}}</td>
+          <td>{{obj.draft_arrival}}</td>
+          <td>{{obj.draft_departure}}</td>
+          <td>{{obj.remarks}}</td>
+          <td>{{obj.service}}</td>
+          <td>{{obj.last_port}}</td>
+          <td>{{obj.next_port}}</td>
+          <td>{{obj.vessel}}</td>
+          <br/>
+          {% endfor %}
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+  
+ 
 
    {% endblock content_main %}
+
+
+   <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
+
+<!-- Modal -->

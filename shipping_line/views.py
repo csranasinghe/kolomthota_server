@@ -1,31 +1,29 @@
 from django.shortcuts import render
-from .forms import VesselArrivalDetailsForm
-from .models import ShippingLine,VesselArrival
+from .forms import VesselArrivalDetailsForm,VesselDetailsForm
+from .models import ShippingLine,VesselArrival,Vessel
 
 
-def add_vessel_details(request):
-    if request.method == "POST":
-         form = VesselArrivalDetailsForm(request.POST)
-         if form.is_valid():
-             vessel_Detail_item = form.save(commit=False)
-             vessel_Detail_item.save()
-    else:
-        form = VesselArrivalDetailsForm()
-    return render( request,'shipping_line/add_vessel_form.html', {'form':form})
+
 
 def vessel_listview(request):
     if request.method == "POST":
-         form = VesselArrivalDetailsForm(request.POST)
-         if form.is_valid():
-             vessel_Detail_item = form.save(commit=False)
-             vessel_Detail_item.save()
+        form = VesselArrivalDetailsForm(request.POST)
+        form_one = VesselDetailsForm(request.POST)
+        if form.is_valid():
+            vessel_Detail_item = form.save(commit=False)
+            vessel_Detail_item.save()
+        elif form_one.is_valid():
+            vessel_item = form_one.save(commit=False)
+            vessel_item.save()
     else:
         form = VesselArrivalDetailsForm()
+        form_one = VesselDetailsForm()
     template_name='shipping_line/vessel_details.html'
     queryset = VesselArrival.objects.all()
     context = {
         "object_list":queryset,
-        'form':form
+        'form':form,
+        'form_one':form_one
     }
     return render(request, template_name ,context)
 

@@ -15,8 +15,8 @@ class Vessel(models.Model):
         ('M', 'Main Line'),
         ('F', 'Feeder Line'),
     )
-    vessel_name = models.CharField(max_length=200)
-    _loa = models.DecimalField(max_digits=6, decimal_places=2)
+    vessel_name = models.CharField(max_length=200, unique=True)
+    vessel_loa = models.DecimalField(max_digits=6, decimal_places=2)
     vessel_status = models.CharField(choices=VESSEL_STATUS_CHOICES,  max_length=2)
 
     def __str__(self):
@@ -24,7 +24,7 @@ class Vessel(models.Model):
 
     @property
     def loa(self):
-        return str(self._loa) + 'M'
+        return str(self.vessel_loa) + 'M'
 
     class Meta:
         verbose_name = 'Vessel'
