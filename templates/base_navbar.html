@@ -50,5 +50,16 @@
         font-size: 1.5rem;
     }
     </style>
+    <script type="text/javascript">
+        function toggle_div_fun(id) {
+    
+           var divelement = document.getElementById(id);
+    
+           if(divelement.style.display == 'none')
+              divelement.style.display = 'block';
+           else
+              divelement.style.display = 'none';
+        }
+    </script>
 {% endblock extra_head %}
 {% include 'snippets/navbar_js.html' %}

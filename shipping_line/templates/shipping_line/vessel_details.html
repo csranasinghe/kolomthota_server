@@ -72,7 +72,7 @@
   <div class="jumbotron" >
     <h3 style=" text-align: center">Add a new Ship</h3>
     <a class="btn btn-info" role="button" data-toggle="modal" data-target="#myModal1">
-        Add Ship
+        Add Vessel Arrival
     </a>
 </div>
 
@@ -106,8 +106,36 @@
                   <li>{{form.next_port.label_tag}}  {{form.next_port}}</li>   
                   <li>{{form.vessel.label_tag}}  {{form.vessel}}</li>    
                   </ul>
+                  
                   <button type="submit" class="btn btn-info" value="Save">Submit</button>
+                  <br/>
               </form>
+              <br/>
+              <a class="btn btn-info" role="button" data-toggle="modal" data-target="#myModal2">
+                Add Ship
+              </a>
+              <div class="modal fade" id="myModal2">
+                <div class="modal-dialog modal-sm modal-dialog-centered">
+                  <div class="modal-content">
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <form method="POST" action="">
+                        {% csrf_token %}
+                        
+                        <ul>
+                        <li>{{form_one.vessel_name.label_tag}}  {{form_one.vessel_name}}</li>
+                        <li>{{form_one.vessel_status.label_tag}}  {{form_one.vessel_status}}</li> 
+                        <li>{{form_one.vessel_loa.label_tag}}  {{form_one.vessel_loa}}</li>
+                        </ul>
+                        <button type="submit" class="btn btn-info" value="Save">Submit</button>
+                    </form>
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+              </div>
           </div>
           
           <!-- Modal footer -->
@@ -117,6 +145,7 @@
           
         </div>
       </div>
-    </div>  
+    
 
-{% endblock content_middle %}btn btn-primary
+  
+{% endblock content_middle %}
