@@ -199,6 +199,7 @@ LOG_CONFIGS = {
 
 }
 logging.config.dictConfig(LOG_CONFIGS)
+
 # Django REST-framekwork
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
