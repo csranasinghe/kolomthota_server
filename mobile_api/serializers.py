@@ -6,7 +6,7 @@ from shipping_line.models import Vessel, VesselArrival
 class VesselSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vessel
-        fields = ('id', 'vessel_status', '_loa', 'loa', 'vessel_name')
+        fields = ('id', 'vessel_status', 'vessel_loa', 'loa', 'vessel_name')
 
 
 class VesselArrivalSerializer(serializers.ModelSerializer):
