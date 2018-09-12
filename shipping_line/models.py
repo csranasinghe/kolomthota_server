@@ -59,7 +59,7 @@ class VesselArrival(models.Model):
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
 
-    vessel = models.OneToOneField('Vessel', on_delete=models.DO_NOTHING)
+    vessel = models.ForeignKey('Vessel', on_delete=models.DO_NOTHING)
 
     class Meta:
         verbose_name = 'Vessel Details'

@@ -12,6 +12,7 @@ class VesselSerializer(serializers.ModelSerializer):
 class VesselArrivalSerializer(serializers.ModelSerializer):
     class Meta:
         model = VesselArrival
+        read_only_fields = ('shipping_line', )
         fields = (
             'shipping_agent',
             'eta',
@@ -25,5 +26,5 @@ class VesselArrivalSerializer(serializers.ModelSerializer):
             'last_port',
             'next_port',
             'vessel',
-            'shipping_line')
+            )
 
