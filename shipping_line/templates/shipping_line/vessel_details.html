@@ -131,10 +131,10 @@
               <form method="POST" action="">
                   {% csrf_token %}
 
-                  <ul>
-{#                  <li>{{form.shipping_agent.label_tag}}  {{form.shipping_agent}}</li>#}
+
+                  <li style="display: none">{{form.shipping_agent.label_tag}} <input type="text" name="shipping_agent" id="id_shipping_agent" value="{{ request.user.id }}"></input></li>
                       <li>{{form.vessel.label_tag}}  {{form.vessel}}</li>
-                  <li>{{form.eta.label_tag}}  {{form.eta}}</li>
+                      <li>{{form.eta.label_tag}}  {{ form.eta }}</li>
                   <li>{{form.dis.label_tag}}  {{form.dis}}</li>
                   <li>{{form.load.label_tag}}  {{form.load}}</li>
                   <li>{{form.ref_no.label_tag}}  {{form.ref_no}}</li>

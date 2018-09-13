@@ -11,10 +11,10 @@ def vessel_listview(request):
         form_one = VesselDetailsForm(request.POST)
         if form.is_valid():
             vessel_Detail_item = form.save(commit=False)
+
             vessel_Detail_item.save()
         elif form_one.is_valid():
-            vessel_item = form_one.save(commit=False)
-            vessel_item.save()
+            form_one.save()
     else:
         form = VesselArrivalDetailsForm()
         form_one = VesselDetailsForm()
