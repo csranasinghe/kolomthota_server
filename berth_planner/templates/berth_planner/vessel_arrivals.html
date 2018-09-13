@@ -1,0 +1,86 @@
+{% extends 'base_navbar.html' %}
+{% load static %}
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "berth_planner/css/vessel_arrivals.css" %}">
+{% endblock extra_head %}
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static "berth_planner/js/vessel_arrivals.js" %}"></script>
+{% endblock extra_js %}
+{% block content_main %}
+
+<h1 style=" text-align: center" class="py-5">Submitted vessel arrivals </h1>
+<table class="table table-hover sub-ves-tbl">
+    <thead>
+      <tr>
+
+                    <th scope="col">ETA</th>
+                    <th scope="col">VESSEL</th>
+                    <th scope="col">Shipping Line</th>
+
+                    <th scope="col">DIS</th>
+                    <th scope="col">LOAD</th>
+                    <th scope="col">TOTAL</th>
+                    <th scope="col">LOA</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">REF.NO</th>
+                    <th scope="col">REMARKS</th>
+<th scope="col">View Details</th>
+<th scope="col">Review</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for vessel in vessels %}
+        <td>{{vessel.eta}}</td>
+
+        <td>{{vessel.vessel.vessel_name}}</td>
+        <td>{{vessel.shipping_agent.shipping_line}}</td>
+        <td>{{vessel.dis}}</td>
+        <td>{{vessel.load}}</td>
+        <td>{{vessel.total}}</td>
+        <td>{{vessel.vessel.vessel_loa}}</td>
+        <td>{{vessel.service}}</td>
+        <td class="{% if vessel.vessel.vessel_status == 'F'%}feeder{% else %}main{% endif %}">{{vessel.vessel.vessel_status}}</td>
+        <td>{{vessel.ref_no}}</td>
+        <td>{{vessel.remarks}}</td>
+
+        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">View Details</button></td>
+            {% if vessel.is_reviewed %}
+        <td><button type="button" class="btn btn-primary approved" submission-id="{{ vessel.id }}">Approved</button></td>
+            {% else %}
+                <td><button type="button" class="btn btn-warning not-approved" submission-id="{{ vessel.id }}">Not Approved</button></td>
+            {% endif %}
+      </tr>
+
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 style="text-align:center" class="modal-title" >Vessel Arrival Details</h4>
+              <button type="button" class="close" data-dismiss="modal">×</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+             <h4>This option is under development.</h4>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content_main %}

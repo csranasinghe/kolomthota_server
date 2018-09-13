@@ -9,11 +9,23 @@
                 Kolomthota
             </a>
              <ul class="nav navbar-nav navbar-right">
+                 {% if request.user.user_type == 'BP' %}
+                 <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:vessel_arrivals" %}" >
+               Vessel Arrivals
+                      </a>
+                 </li>
+                     {% else %}
+                     <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:schedule_published" %}" >
+               Berth Programme
+                      </a>
+                 </li>
+                 {% endif %}
+
               <li class="nav-item dropdown">
-                  <a class="nav-link" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <div class="inset">
-                  <img src="{% static "img/default-avatar.png" %}">
-                </div>
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               {{ request.user.get_full_name }}
                       </a>
                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                        <a class="dropdown-item" href="{% url "accounts:logout" %}">Logout</a>
@@ -26,25 +38,7 @@
 {% endblock header %}
 {% block extra_head %}
     <style>
-    .inset {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,0.6),
-    0 1px 1px rgba(0,0,0,0.1);
-  background-color: transparent !important;
-  z-index: 999;
-}
 
-.inset img {
-  border-radius: inherit;
-  width: inherit;
-  height: inherit;
-  display: block;
-  position: relative;
-  z-index: 998;
-}
     .navbar-brand{
         font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
         font-size: 1.5rem;
