@@ -36,7 +36,7 @@ def berth_schedule(request):
 
 def view_history(request):
     template_name='shipping_line/history.html'
-    queryset = VesselArrival.objects.all()
+    queryset = VesselArrival.objects.all(shipping_line=request.user.sa_account.shipping_line)
     context = {
         "object_list":queryset
     }
