@@ -59,7 +59,7 @@ class VesselArrival(models.Model):
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
 
-    vessel = models.ForeignKey('Vessel', on_delete=models.DO_NOTHING)
+    vessel = models.ForeignKey('Vessel', on_delete=models.DO_NOTHING, related_name="vessel")
 
     class Meta:
         verbose_name = 'Vessel Details'
@@ -76,6 +76,10 @@ class VesselArrival(models.Model):
     @property
     def total(self):
         return self.dis + self.load
+
+    @property
+    def vessel_name(self):
+        return self.vessel.vessel_name
 
 
 
