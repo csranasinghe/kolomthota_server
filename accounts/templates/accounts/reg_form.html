@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
+{% endblock extra_head %}
+
+{% block extra_js %}
+    <script src="{% static 'accounts/js/login.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content_main %}
+<section class="login-section h-100">
+    <div class="container h-100">
+        <div class="row justify-content-md-center h-100">
+            <div class="card-wrapper">
+                <div class="brand">
+                    <img src="{% static "img/logo.png" %}">
+                </div>
+                <div class="card fat">
+                    <div class="card-body">
+                        <h4 class="card-title">Kolomthota Register</h4>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade show {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                            {{ message }}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+{% endfor %}
+
+
+
+
+{% endif %}
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{form.username.label_tag}}{{form.username}}<br/>
+        {{form.password1.label_tag}}{{form.password1}}<br/>
+        {{form.password2.label_tag}}{{form.password2}}<br/>
+        {{form.email.label_tag}}{{form.email}}<br/>
+        {{form.user_type.label_tag}}{{form.user_type}}<br/>
+        {{form.first_name.label_tag}}{{form.first_name}}<br/>
+        {{form.last_name.label_tag}}{{form.last_name}}<br/>
+        <button type="submit">submit</button>
+    </form>
+</div>
+
+
+{% endblock content_main %}

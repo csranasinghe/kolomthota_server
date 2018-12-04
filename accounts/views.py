@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView
+from django.shortcuts import render,redirect
+from .forms import CustomUserCreationForm
 
 import logging
 logger = logging.getLogger(__name__)
@@ -41,6 +43,23 @@ class IndexView(LoginRequiredMixin, View):
         elif user.user_type == 'ADMIN':
             return HttpResponseRedirect(reverse('admin:index'))
 
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/login')
+        else:
+            form = CustomUserCreationForm()
+            args = {'form':form}
+            return render(request,'accounts/reg_form.html',args)
+    else:
+        form = CustomUserCreationForm()
+
+        args = {'form':form}
+        return render(request,'accounts/reg_form.html',args)
+
+    
 #
 # class RegisterSLAView(CreateView):
 #     form_class = UserCreationForm
