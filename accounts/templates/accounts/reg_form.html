@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load widget_tweaks %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
@@ -11,42 +12,82 @@
 {% endblock extra_js %}
 
 {% block content_main %}
-<section class="login-section h-100">
-    <div class="container h-100">
-        <div class="row justify-content-md-center h-100">
-            <div class="card-wrapper">
-                <div class="brand">
-                    <img src="{% static "img/logo.png" %}">
-                </div>
-                <div class="card fat">
-                    <div class="card-body">
-                        <h4 class="card-title">Kolomthota Register</h4>
+    <section class="login-section h-100 mb-5">
+        <div class="container h-100">
+            <div class="row justify-content-md-center h-100">
+                <div class="card-wrapper">
+                    <div class="brand">
+                        <img src="{% static "img/logo.png" %}">
+                    </div>
+                    <div class="card fat">
+                        <div class="card-body">
+                            <h4 class="card-title">Shipping Line Agent<br/>Registration</h4>
 
-                    {% if messages %}
-                        {% for message in messages %}
-                        <div class="alert alert-danger alert-dismissible fade show {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
-                            {{ message }}<button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-danger alert-dismissible fade show
+                                            {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <form method="POST">
+
+                                <div class="form-group">
+                                    <label for="name">First Name</label>
+                                    {% render_field form.first_name class="form-control" %}
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="name">Last Name</label>
+                                    {% render_field form.last_name class="form-control" %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="name">Username</label>
+                                    {% render_field form.username class="form-control" %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">E-Mail Address</label>
+                                    {% render_field form.email class="form-control" %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    {% render_field form.password1 class="form-control" %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Confirm Password</label>
+                                    {% render_field form.password2 class="form-control" %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="aggree" value="1"> I agree to the Terms and
+                                        Conditions
+                                    </label>
+                                </div>
+
+                                <div class="form-group no-margin">
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        Register
+                                    </button>
+                                </div>
+                                <div class="margin-top20 text-center">
+                                    Already have an account? <a href="{% url "accounts:login" %}">Login</a>
+                                </div>
+                            </form>
                         </div>
-{% endfor %}
+                    </div>
 
-
-
-
-{% endif %}
-
-<div class="container">
-    <form method="post">
-        {% csrf_token %}
-        {{form.username.label_tag}}{{form.username}}<br/>
-        {{form.password1.label_tag}}{{form.password1}}<br/>
-        {{form.password2.label_tag}}{{form.password2}}<br/>
-        {{form.email.label_tag}}{{form.email}}<br/>
-        {{form.user_type.label_tag}}{{form.user_type}}<br/>
-        {{form.first_name.label_tag}}{{form.first_name}}<br/>
-        {{form.last_name.label_tag}}{{form.last_name}}<br/>
-        <button type="submit">submit</button>
-    </form>
-</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
 {% endblock content_main %}
