@@ -75,15 +75,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
-]
-TEMPLATE_CONTEXT_PROCESSORS = [
-    "django.core.context_processors.auth",
-    "django.core.context_processors.debug",
-    'django.core.context_processors.request',
-    "django.core.context_processors.i18n",
 ]
 
 WSGI_APPLICATION = 'kolomthota_server.wsgi.application'
@@ -222,6 +217,8 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
 
     'JWT_VERIFY': True,
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3000),
     'JWT_AUTH_HEADER_PREFIX': 'Token',
