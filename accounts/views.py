@@ -45,21 +45,22 @@ class IndexView(LoginRequiredMixin, View):
         elif user.user_type == 'VP' or user.user_type == 'BM':
             return HttpResponseRedirect(reverse('vessel_planner:index'))
 
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/login')
+            return HttpResponseRedirect(reverse('accounts:login'))
         else:
             form = CustomUserCreationForm()
-            args = {'form':form}
-            return render(request,'accounts/reg_form.html',args)
+            args = {'form': form}
+            return render(request, 'accounts/reg_form.html', args)
     else:
         form = CustomUserCreationForm()
 
-        args = {'form':form}
-        return render(request,'accounts/reg_form.html',args)
+        args = {'form': form}
+        return render(request, 'accounts/reg_form.html', args)
 
     
 #

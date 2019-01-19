@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^$', IndexView.as_view(), name="index"),
     url('^login/$', AccountLoginView.as_view(), name="login"),
     url('^logout/$', LogoutView.as_view(),  name="logout"),
-    url('^register/$',register,name='register')
+    url('^register/$', register, name='register')
 ]
