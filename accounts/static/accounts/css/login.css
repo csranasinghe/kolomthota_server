@@ -1,66 +1,65 @@
+
 html,body {
-	height: 100%;
+   height: 100%;
 }
 
-body .content-body{
+body.my-login-page {
 	background-color: #f7f9fb;
 	font-size: 14px;
 }
 
+body .content-body{
+   background-color: #f7f9fb;
+   font-size: 14px;
+}
 .login-section .brand {
-	width: 90px;
-	height: 90px;
-	overflow: hidden;
-	border-radius: 50%;
-	margin: 0 auto;
-	margin: 40px auto;
-	box-shadow: 0 0 40px rgba(0,0,0,.05);
+   width: 90px;
+   height: 90px;
+   overflow: hidden;
+   border-radius: 50%;
+   margin: 0 auto;
+   margin: 40px auto;
+   box-shadow: 0 0 40px rgba(0,0,0,.05);
 }
-
 .login-section .brand img {
-	width: 100%;
+   width: 100%;
 }
-
 .login-section .card-wrapper {
-	width: 400px;
+   width: 400px;
 }
-
 .login-section .card {
-	border-color: transparent;
-	box-shadow: 0 0 40px rgba(0,0,0,.05);
+   border-color: transparent;
+   box-shadow: 0 0 40px rgba(0,0,0,.05);
 }
-
 .login-section .card.fat {
-	padding: 10px;
+   padding: 10px;
 }
-
 .login-section .card .card-title {
-	margin-bottom: 30px;
-	text-align: center;
+   margin-bottom: 30px;
+   text-align: center;
 }
-
 .login-section .form-control {
-	border-width: 2.3px;
+   border-width: 2.3px;
 }
-
 .login-section .form-group label {
-	width: 100%;
+   width: 100%;
 }
-
 .login-section .btn.btn-block {
-	padding: 12px 10px;
+   padding: 12px 10px;
 }
-
 .login-section .margin-top20 {
-	margin-top: 20px;
+   margin-top: 20px;
 }
-
 .login-section .no-margin {
-	margin: 0;
+   margin: 0;
 }
-
 .login-section .footer {
-	margin: 40px 0;
-	color: #888;
-	text-align: center;
+   margin: 40px 0;
+   color: #888;
+   text-align: center;
+}
+.login-section.container {
+padding 10px;
+text-align: center;
+width:100%;
 }
