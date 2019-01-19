@@ -10,6 +10,8 @@ class Account(AbstractUser):
         ('BP', 'Berth Planner'),
         ('SA', 'Shipping Agent'),
         ('ADMIN', 'System Admin'),
+        ('DM', 'Duty Manager'),
+        ('VP','Vessel Planner'),
     )
     user_type = models.CharField(choices=USER_TYPE_CHOICES,  max_length=10)
     def __str__(self):

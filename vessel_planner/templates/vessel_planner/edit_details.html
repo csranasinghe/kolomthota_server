@@ -1,0 +1,23 @@
+{% extends 'vessel_planner/index.html' %}
+
+
+{% block content_middle %}
+<h1 style=" text-align: center">Edit Progress</h1>
+{{progress.vessel}}
+
+<form method="POST" action="">
+
+    {% csrf_token %}
+    <li style="display: none">{{form.vessel.label_tag}} <input type="text" name="vessel" id="id_vessel" value="{{ progress.vessel }}"></input></li>
+    <li>{{form.dis.label_tag}}  {{form.dis}}</li>
+    <li>{{form.load.label_tag}}  {{form.load}}</li>
+
+    </ul>
+
+    <br/>
+     <button type="submit" class="btn btn-info" value="Save">Submit</button>
+</form>
+
+           
+
+{% endblock content_middle %}

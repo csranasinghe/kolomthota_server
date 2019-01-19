@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404 ,redirect
 from shipping_line.models import VesselArrival
+from vessel_planner.models import Messages
 
 
 def index(request):
@@ -10,6 +11,28 @@ def index(request):
         "vessel_arrivals":queryset,
     }
     return render(request, 'berth_planner/dashboard.html', context)
+
+def show_messages(request):
+    queryset1 = Messages.objects.filter(is_reviewed=False)
+    queryset2 = Messages.objects.filter(is_reviewed=True)
+
+    context = {
+        "messages1":queryset1,
+        "messages2":queryset2,
+    }
+    return render(request, 'berth_planner/messages.html', context)
+
+def mark_as_read(request,item_id=None):
+    item = Messages.objects.get(id=item_id)       
+    item.is_reviewed = True
+    item.save()
+    return redirect('/berth-planner/messages')
+
+def mark_as_unread(request,item_id=None):
+    item = Messages.objects.get(id=item_id)       
+    item.is_reviewed = False
+    item.save()
+    return redirect('/berth-planner/messages')
 
 
 def schedule_published(request):
