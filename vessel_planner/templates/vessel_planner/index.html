@@ -1,0 +1,25 @@
+{% extends 'base_navbar.html' %}
+{% load static %}
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static "shipping_line/js/vessel_delete.js" %}"></script>
+{% endblock extra_js %}
+
+  {% block content_main %}
+    <br/>
+
+        <div class="row" >
+        <div class="col-sm-12" style="height:auto;border-left-style: solid;border-right-style: solid">
+            {% block content_middle %}
+            
+            {% endblock content_middle %}
+        </div>
+    </div>
+   
+   
+</div>
+ 
+     
+
+  {% endblock content_main %}
+

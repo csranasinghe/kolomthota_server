@@ -62,7 +62,10 @@
                                     <button type="submit" class="btn btn-primary btn-block">
                                         Login
                                     </button>
-                                    Don't have an account? <a href="/register/">Create One</a>
+                                    <div class="margin-top20 text-center">
+                                        Don't have an account? <a href="{% url "accounts:register" %}">Create One</a>
+                                    </div>
+
                                 </div>
                             </form>
                         </div>
