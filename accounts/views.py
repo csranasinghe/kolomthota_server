@@ -42,7 +42,7 @@ class IndexView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('berth_planner:index'))
         elif user.user_type == 'ADMIN':
             return HttpResponseRedirect(reverse('admin:index'))
-        elif user.user_type == 'VP' or user.user_type == 'BM':
+        elif user.user_type == 'VP' or 'BM':
             return HttpResponseRedirect(reverse('vessel_planner:index'))
 
 
