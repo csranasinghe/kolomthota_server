@@ -43,13 +43,13 @@
         <td>{{obj.last_port}}</td>
         <td>{{obj.next_port}}</td>
         <td>{{obj.vessel}}</td>
-        <td><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">View Details</button></td>
+        <td><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">View</button></td>
         
         <td>
-            <a href="/shipping-line/remove_items/{{obj.id}}"><span class="fa fa-times"></span></a>
+          <input type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items/{{obj.id}}';" value="Delete" />
         </td>
         <td>
-          <a href="/shipping-line/edit_vessels/{{obj.id}}"><span class="fa fa-times"></span></a>
+          <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';" value="Edit" />
       </td>
       </tr>
 
