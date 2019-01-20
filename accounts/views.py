@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm ,UserChangeForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -8,7 +8,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView
 from django.shortcuts import render,redirect
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm ,EditProfileForm
+from .models import ShippingAgent
 
 import logging
 logger = logging.getLogger(__name__)
@@ -48,9 +49,21 @@ class IndexView(LoginRequiredMixin, View):
             return redirect('/')
 
 def view_profile(request):
-    args = {'user':request.user}
-    return render(request,'accounts/profile.html',args)
+    queryset = ShippingAgent.objects.filter(account=request.user)
+    content = {'user':request.user}
+    return render(request,'accounts/profile.html',content)
             
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+        content = {'form':form}
+        return render(request, 'accounts/edit_profile.html', content)
+
 
 def register(request):
     if request.method == 'POST':
