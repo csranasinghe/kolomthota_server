@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'shipping_line',
     'mobile_api',
     'vessel_planner',
-    'widget_tweaks',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
