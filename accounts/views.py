@@ -47,7 +47,7 @@ class IndexView(LoginRequiredMixin, View):
         else:
             return redirect('/')
 
-def profile(request):
+def view_profile(request):
     args = {'user':request.user}
     return render(request,'accounts/profile.html',args)
             
