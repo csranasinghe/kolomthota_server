@@ -31,11 +31,15 @@
             
             <h1>Profile</h1>
             <p>First Name : {{user.first_name}}</p>
+
             <p>Last Name : {{user.last_name}}</p>
             <p>User Name : {{user.username}}</p>
             <p>E-mail address : {{user.email}}</p>
-            <button type="button" class="btn btn-info">Edit Profile</button>
            
+
+
+            <input type="button" class="btn btn-outline-info" onclick="location.href='/profile/edit';" value="Edit" />
+
             {% endblock content_middle %}
             </div>
         </div>
