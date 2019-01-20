@@ -12,8 +12,7 @@
         <div class="col-sm-12" style="height:auto;border-left-style: solid;border-right-style: solid">
             {% block content_middle %}
             <h1>Profile</h1>
-            <h5>{{user.first_name.label_tag}}</h5>
-            <p>{{user.first_name}}</p>
+            <p>First Name: {{user.first_name}}</p>
             <br>
             {{user.first_name}}
             {{user.last_name}}
