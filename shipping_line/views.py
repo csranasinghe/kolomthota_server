@@ -19,7 +19,7 @@ def vessel_listview(request):
         form_one = VesselDetailsForm()
     
     template_name='shipping_line/vessel_details.html'
-    queryset = VesselArrival.objects.all()
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id)
     context = {
         "object_list":queryset,
         'form':form,

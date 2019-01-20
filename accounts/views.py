@@ -44,7 +44,13 @@ class IndexView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('admin:index'))
         elif user.user_type == 'VP' or 'BM':
             return HttpResponseRedirect(reverse('vessel_planner:index'))
+        else:
+            return redirect('/')
 
+def profile(request):
+    args = {'user':request.user}
+    return render(request,'accounts/profile.html',args)
+            
 
 def register(request):
     if request.method == 'POST':

@@ -28,6 +28,7 @@
                {{ request.user.get_full_name }}
                       </a>
                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                       <a class="dropdown-item" href="{% url "accounts:profile" %}">Profile</a>
                        <a class="dropdown-item" href="{% url "accounts:logout" %}">Logout</a>
                 </div>
               </li>

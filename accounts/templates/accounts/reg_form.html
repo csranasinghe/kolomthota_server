@@ -33,7 +33,10 @@
                                 {% endfor %}
                             {% endif %}
                             <form method="POST">
+                                {% csrf_token %}
 
+
+                                <li style="display: none">{{form.shipping_agent.label_tag}} <input type="text" name="user_type" id="user_type" value='SA'></li>
                                 <div class="form-group">
                                     <label for="name">First Name</label>
                                     {% render_field form.first_name class="form-control" %}

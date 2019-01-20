@@ -50,3 +50,4 @@ def remove_vessel_progress(request,item_id=None):
     item = VesselProgress.objects.get(id=item_id)       
     item.delete()
     return redirect('/')
+

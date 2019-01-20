@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Messages(models.Model):
-    message_author = models.ForeignKey('accounts.Account', on_delete=models.PROTECT)
+    message_author = models.ForeignKey('accounts.Account', on_delete = models.PROTECT)
     message = models.CharField(max_length=200)
     is_reviewed = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now=True ,unique=True)
