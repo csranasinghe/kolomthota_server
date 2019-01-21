@@ -12,5 +12,5 @@ urlpatterns = [
     url('^register/$',register,name='register'),
     url('^profile/$',view_profile,name='viewProfile'),
     url('^profile/edit/$',edit_profile ,name = "editProfile" ),
-    url('^change-password/$',change_password ,name = "changePassword" )
+    url('^change-password/$', change_password ,name = "changePassword" )
 ]
