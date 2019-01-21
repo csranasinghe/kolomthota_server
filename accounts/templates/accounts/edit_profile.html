@@ -7,13 +7,23 @@
 
   {% block content_main %}
     <br/>
+    
 
-        <div class="row" >
+
+
+    <div class="row" >
         <div class="col-sm-12" style="height:auto;border-left-style: solid;border-right-style: solid">
             {% block content_middle %}
            <form method="post">
                 {% csrf_token %}
                {{ form.as_p}}
+
+
+               
+
+
+
+
 
                <button type="submit">Submit</button>
             <br>
@@ -25,7 +35,13 @@
     </div>
    
    
-</div>
+    
+
+                       
+
+
+
+
  
      
 
