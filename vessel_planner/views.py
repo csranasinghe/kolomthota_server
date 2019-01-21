@@ -25,13 +25,11 @@ def vessel_dashboard(request):
     }
     return render(request,template_name,context)
 
-def progress(request,item_id=None):
+def progress(request,item_id):
     if request.method == "POST":
-        form_value = VesselProgressForm(request.POST)
-        
+        progress = VesselProgress.objects.get(id=item_id)
+        form_value = VesselProgressForm(request.POST, instance = progress)   
         if form_value.is_valid():
-            progress = VesselProgress.objects.get(id=item_id)
-            form_value = VesselProgressForm(request.POST, instance = progress)
             form_value.save()
             return redirect('/')
         else:
