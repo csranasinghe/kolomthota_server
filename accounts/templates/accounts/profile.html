@@ -1,8 +1,12 @@
 {% extends 'base_navbar.html' %}
 {% load static %}
+<<<<<<< HEAD
 {% block extra_head %}
     <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
 {% endblock extra_head %}
+=======
+
+>>>>>>> 64f625a0b9dc2711bf193501616d6284b15147b3
 
 {% block extra_js %}
     {{ block.super }}
@@ -10,49 +14,38 @@
 {% endblock extra_js %}
 
   {% block content_main %}
-    <br/>
-
-    
-    <div class="container" style=text-align:center;padding:100px>
-            <section class="login-section h-100">
-                    <div class="container h-100">
-                        <div class="row justify-content-md-center h-100">
-                            <div class="card-wrapper">
-                                <div class="brand">
-                                    <img src="{% static "img/logo.png" %}">
-                                </div>
-                             
-                                                    
+   
                                     
-                                
-            
-                            </div>
+                                                 
+
+        
+            {% block content_middle %}
+            <div class="row">
+                <div class="col-sm-3" ></div>
+                <div class="col-sm-6" >
+                    <div class="card" style="width: 500px;height:400px;text-align:center;margin: 0 auto;float: none;margin-bottom: 10px;margin-top: 100px;">
+                        
+                        <div class="card-body">
+                                <img src="{% static "img/logo.png" %}" style="height:100px">
+                            <h1 class="card-title">Profile</h1>
+                            
+                
+                            <p>First Name : {{user.first_name}}</p>
+        
+                            <p>Last Name : {{user.last_name}}</p>
+                            <p>User Name : {{user.username}}</p>
+                            <p>E-mail address : {{user.email}}</p>
+                            <input type="button" class="btn btn-outline-info" onclick="location.href='/profile/edit';" value="Edit" />
+                            <input type="button" class="btn btn-outline-info" onclick="location.href='/change-password';" value="Change Password" />
+                
                         </div>
                     </div>
-                </section>
-
-        <div class="row" >
-        <div class="col-sm-12" style="height:auto;">
-            {% block content_middle %}
-            
-            <h1>Profile</h1>
-            <p>First Name : {{user.first_name}}</p>
-
-            <p>Last Name : {{user.last_name}}</p>
-            <p>User Name : {{user.username}}</p>
-            <p>E-mail address : {{user.email}}</p>
-           
-
-
-            <input type="button" class="btn btn-outline-info" onclick="location.href='/profile/edit';" value="Edit" />
-            <input type="button" class="btn btn-outline-info" onclick="location.href='/change-password';" value="Change Password" />
-
-            {% endblock content_middle %}
+                </div>
+                <div class="col-sm-3"></div>
+                
             </div>
-        </div>
-    </div>
-   
-   
+            {% endblock content_middle %}
+           
 </div>
  
      
