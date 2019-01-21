@@ -1,5 +1,10 @@
 {% extends 'base_navbar.html' %}
 {% load static %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
+{% endblock extra_head %}
+
+
 {% block extra_js %}
     {{ block.super }}
     <script src="{% static "shipping_line/js/vessel_delete.js" %}"></script>
@@ -7,6 +12,8 @@
 
   {% block content_main %}
     <br/>
+
+    
     <div class="container" style=text-align:center;padding:100px>
             <section class="login-section h-100">
                     <div class="container h-100">
@@ -39,6 +46,7 @@
 
 
             <input type="button" class="btn btn-outline-info" onclick="location.href='/profile/edit';" value="Edit" />
+            <input type="button" class="btn btn-outline-info" onclick="location.href='/change-password';" value="Change Password" />
 
             {% endblock content_middle %}
             </div>

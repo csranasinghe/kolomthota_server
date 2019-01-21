@@ -1,14 +1,15 @@
 from django.contrib.auth import authenticate
 from django.http import HttpResponseRedirect
-from django.contrib.auth.forms import AuthenticationForm ,UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm ,UserChangeForm ,PasswordChangeForm
 from django.contrib.auth.views import LoginView
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import CreateView
 from django.shortcuts import render,redirect
-from .forms import CustomUserCreationForm ,EditProfileForm
+from .forms import CustomUserCreationForm ,EditProfileForm 
 from .models import ShippingAgent
 
 import logging
@@ -63,6 +64,20 @@ def edit_profile(request):
         form = EditProfileForm(instance=request.user)
         content = {'form':form}
         return render(request, 'accounts/edit_profile.html', content)
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return redirect('/profile')
+        else:
+            return redirect('accounts/change_password.html')
+    else:
+        form = PasswordChangeForm(user=request.user)
+        content = {'form':form}
+        return render(request, 'accounts/change_password.html', content)
 
 
 def register(request):
