@@ -20,5 +20,7 @@ DATABASES = {
     }
 }
 
+
+
 if get_config('IS_AUTHENTICATION_ENABLED') == "False":
     REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = ()

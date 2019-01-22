@@ -1,7 +1,8 @@
-from django.shortcuts import render ,redirect
+from django.shortcuts import render ,redirect ,get_object_or_404
 from shipping_line.models import VesselArrival
 from .models import Messages , VesselProgress
 from .forms import MessageSend ,VesselProgressForm
+from django.views.generic import UpdateView
 
 # Create your views here.
 def vessel_dashboard(request):
@@ -25,11 +26,12 @@ def vessel_dashboard(request):
     }
     return render(request,template_name,context)
 
-def progress(request,item_id):
+def progress(request,item_id=None):
     if request.method == "POST":
-        progress = VesselProgress.objects.get(id=item_id)
-        form_value = VesselProgressForm(request.POST, instance = progress)   
+        form_value = VesselProgressForm(request.POST)   
         if form_value.is_valid():
+            progress = VesselProgress.objects.get(id=item_id)
+            form_value = VesselProgressForm(request.POST, instance = progress)
             form_value.save()
             return redirect('/')
         else:

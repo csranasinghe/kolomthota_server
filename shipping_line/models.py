@@ -35,12 +35,12 @@ class VesselArrival(models.Model):
 
     shipping_agent = models.ForeignKey('accounts.ShippingAgent', on_delete=models.PROTECT)
 
-    eta = models.DateTimeField(null=True, blank=True)
+    eta = models.DateTimeField(null=True)
 
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
 
-    ref_no = models.CharField(max_length=100, unique=True)
+    ref_no = models.CharField(max_length=100)
     draft_arrival = models.DecimalField(max_digits=4, decimal_places=2)
     draft_departure = models.DecimalField(max_digits=4, decimal_places=2)
     remarks = models.TextField(null=True, blank=True)

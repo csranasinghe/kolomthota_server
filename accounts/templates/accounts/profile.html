@@ -1,12 +1,5 @@
 {% extends 'base_navbar.html' %}
 {% load static %}
-<<<<<<< HEAD
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static "accounts/css/login.css" %}">
-{% endblock extra_head %}
-=======
-
->>>>>>> 64f625a0b9dc2711bf193501616d6284b15147b3
 
 {% block extra_js %}
     {{ block.super }}
@@ -27,7 +20,7 @@
                         
                         <div class="card-body">
                                 <img src="{% static "img/logo.png" %}" style="height:100px">
-                            <h1 class="card-title">Profile</h1>
+                            <h1 class="card-title">{{user.first_name}} {{user.last_name}}</h1>
                             
                 
                             <p>First Name : {{user.first_name}}</p>

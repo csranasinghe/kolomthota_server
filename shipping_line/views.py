@@ -37,11 +37,12 @@ def remove_arrival(request,item_id=None):
 def edit_arrival(request,item_id=None):
     if request.method == "POST":
         form_value = VesselArrivalDetailsForm(request.POST)
-        
         if form_value.is_valid():
             vessel = VesselArrival.objects.get(id=item_id)
             form_value = VesselArrivalDetailsForm(request.POST, instance = vessel)
             form_value.save()
+            return redirect('/')
+        else:
             return redirect('/')
     else:
         vessel = VesselArrival.objects.get(id=item_id)
