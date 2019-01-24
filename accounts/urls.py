@@ -1,9 +1,18 @@
 from django.conf.urls import url, include
-from django.contrib.auth.views import LogoutView ,password_reset_done, password_reset ,password_reset_confirm
-from .views import AccountLoginView,  IndexView ,register ,view_profile ,edit_profile ,change_password
+from django.contrib.auth.views import (
+    LogoutView ,
+    PasswordResetView ,
+    PasswordResetDoneView
+)
+from .views import (
+    AccountLoginView,  
+    IndexView ,
+    register ,
+    view_profile ,
+    edit_profile ,
+    change_password
+)
 from django.contrib.auth import views as auth_views
-
-
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name="index"),
