@@ -14,5 +14,8 @@ urlpatterns = [
     url(r'^auth/token$', obtain_jwt_token),
     url(r'^auth/token/refresh$', refresh_jwt_token),
     url(r'^logout$', Logout.as_view(), name="api_logout"),
-    url(r'^users/sa/$', ShippingAgentAPIView.as_view(), name='shiping_agent_register')
+    url(r'^users/sa$', ShippingAgentAPIView.as_view(), name='shiping_agent_register'),
+    url(r'^shipping-lines$', ShippingLinesListAPIView.as_view(), name='shippingline_list')
+
+
 ]

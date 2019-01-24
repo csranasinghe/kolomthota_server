@@ -1,11 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from shipping_line.models import Vessel, VesselArrival
 from accounts.models import ShippingAgent, Account
-from .serializers import VesselSerializer, VesselArrivalSerializer, \
-    ShippingAgentAccountSerializer, UserAccountSerializer
+from .serializers import *
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -46,6 +45,14 @@ class ShippingAgentAPIView(APIView):
         sh_agent = sa_serializer.save()
 
         return Response({"msg": "Shipping line agent account created successfully."}, status=status.HTTP_201_CREATED)
+
+
+class ShippingLinesListAPIView(ListAPIView):
+    """
+    API view to retrieve the list of registered shipping lines.
+    """
+    serializer_class = ShippingLineSerializer
+    queryset = ShippingLine.objects.all()
 
 
 class Logout(APIView):
