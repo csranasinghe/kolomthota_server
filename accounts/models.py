@@ -11,11 +11,14 @@ class Account(AbstractUser):
         ('SA', 'Shipping Agent'),
         ('ADMIN', 'System Admin'),
         ('DM', 'Duty Manager'),
-        ('VP','Vessel Planner'),
+        ('VP', 'Vessel Planner'),
     )
-    user_type = models.CharField(choices=USER_TYPE_CHOICES,  max_length=10)
+    user_type = models.CharField(choices=USER_TYPE_CHOICES,  default='SA', max_length=10)
+    REQUIRED_FIELDS = AbstractUser.REQUIRED_FIELDS + ['first_name', 'last_name', 'user_type']
+
     def __str__(self):
         return self.get_full_name()
+
     class Meta:
         verbose_name = 'account'
         verbose_name_plural = 'accounts'
