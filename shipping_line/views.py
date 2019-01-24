@@ -27,6 +27,13 @@ def vessel_listview(request):
     }
     return render(request, template_name ,context)
 
+def vessel_timestamp(request):
+    template_name='shipping_line/vessel_timestamp.html'
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id)
+    context = {
+        "object_list":queryset
+    }
+    return render(request, template_name ,context)
 
 
 def remove_arrival(request,item_id=None):
