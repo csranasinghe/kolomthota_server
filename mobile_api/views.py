@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -55,12 +57,25 @@ class ShippingLinesListAPIView(ListAPIView):
     queryset = ShippingLine.objects.all()
 
 
+class CheckUsernameAPIView(APIView):
+    """
+    API view to check for username availability
+    TODO: get the encrypted username and decrypt it using a secret which is known by trusted apps
+    """
+    def get(self, request, username_hash=None):
+        if username_hash:
+            account = get_object_or_404(Account, username=username_hash)
+            if account:
+                return Response({'msg': 'The username already exists.'})
+        return Response({'msg': "Bad request."}, status.HTTP_400_BAD_REQUEST)
+
+
 class Logout(APIView):
     """
     A view for handle logout functionality
     TODO: add token to a blacklisted token model
     """
 
-    def get(self, request, format=None):
+    def get(self, request):
         return Response({'msg': 'Successfully logged out.'})
 
