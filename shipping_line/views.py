@@ -1,6 +1,9 @@
 from django.shortcuts import render,redirect
 from .forms import VesselArrivalDetailsForm,VesselDetailsForm
 from .models import ShippingLine,VesselArrival,Vessel
+from datetime import datetime
+from datetime import timedelta
+from django.http import HttpResponse
 
 
 
@@ -19,7 +22,7 @@ def vessel_listview(request):
         form_one = VesselDetailsForm()
     
     template_name='shipping_line/vessel_details.html'
-    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id)
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
     context = {
         "object_list":queryset,
         'form':form,
@@ -29,9 +32,10 @@ def vessel_listview(request):
 
 def vessel_timestamp(request):
     template_name='shipping_line/vessel_timestamp.html'
-    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id)
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
     context = {
-        "object_list":queryset
+        "object_list":queryset,
+        'time':datetime.now()
     }
     return render(request, template_name ,context)
 
@@ -71,10 +75,47 @@ def berth_schedule(request):
     }
     return render(request, template_name ,context)
 
+
 def view_history(request):
-    template_name='shipping_line/history.html'
-    queryset = VesselArrival.objects.all(shipping_line=request.user.sa_account.shipping_line)
-    context = {
-        "object_list":queryset
-    }
-    return render(request, template_name ,context)
+    if request.method=="GET":
+        data = request.GET.get('from_date')
+        data_limit = request.GET.get('to_date')
+
+        start = datetime(
+            day = int(data[8:10]),
+            month = int(data[5:7]),
+            year = int(data[0:4]),
+            hour = int(data[11:13]),
+            minute = int(data[14:])
+        )
+        end = datetime(
+            day = int(data_limit[8:10]),
+            month = int(data_limit[5:7]),
+            year = int(data_limit[0:4]),
+            hour =  int(data_limit[11:13]),
+            minute = int(data_limit[14:])
+        )
+        #remainder = end - start
+        queryset = VesselArrival.objects.all().order_by('-eta')
+        value_in_queryset=[]
+        for i in queryset:
+            absolute_date = datetime(
+                day = i.eta.day,
+                month = i.eta.month,
+                year = i.eta.year,
+                hour = i.eta.hour,
+                minute = i.eta.minute
+            )
+            if start <= absolute_date <=end :
+                value_in_queryset.append(i)
+            else:
+                pass
+
+        template_name='shipping_line/history.html'
+        context = {
+            "object_list":value_in_queryset
+        }
+        return render(request, template_name ,context)
+
+def get_list_to_be_notified():
+    pass
