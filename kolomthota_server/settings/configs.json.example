@@ -11,6 +11,8 @@
   "DB_PORT": "",
 
   "EMAIL_USERNAME":"",
-  "EMAIL_PASSWORD":""
+  "EMAIL_PASSWORD":"",
+
+  "IS_AUTHENTICATION_ENABLED": "", //True or False
 
 }

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from shipping_line.models import Vessel, VesselArrival
+from shipping_line.models import Vessel, VesselArrival, ShippingLine
+from accounts.models import ShippingAgent, Account
 
 
 class VesselSerializer(serializers.ModelSerializer):
@@ -31,3 +32,20 @@ class VesselArrivalSerializer(serializers.ModelSerializer):
             'vessel_name'
         )
 
+
+class ShippingAgentAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingAgent
+        fields = ('shipping_line', 'account')
+
+
+class UserAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('username', 'password', 'email', 'first_name', 'last_name', 'user_type')
+
+
+class ShippingLineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingLine
+        fields = ('id', 'name', 'email')
