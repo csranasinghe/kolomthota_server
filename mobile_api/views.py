@@ -41,7 +41,7 @@ class ShippingAgentAPIView(APIView):
         account = account_serializer.save()
 
         sa_serializer = ShippingAgentAccountSerializer(data={
-            'shipping_line': request.data.get('shipping_line_id', None),
+            'shipping_line': request.data.get('shipping_line', None),
             'account': account.id})
         sa_serializer.is_valid(raise_exception=True)
         sh_agent = sa_serializer.save()
