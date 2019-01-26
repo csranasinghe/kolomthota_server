@@ -5,11 +5,49 @@ from datetime import datetime
 from datetime import timedelta
 from django.http import HttpResponse
 
+def get_list_to_be_notified(queryset):
+    time = datetime.now()
+    within_72h = []
+    within_48h = []
+    within_24h = []
+    count = 0
+    for i in queryset:
+        absolute_date = datetime(
+                day = i.eta.day,
+                month = i.eta.month,
+                year = i.eta.year,
+                hour = i.eta.hour,
+                minute = i.eta.minute
+        )
+        difference = absolute_date - time
+        if i.first_confirm != True :
+            if difference.days < 3:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_72h.append(i)
+                count += 1
+        elif i.second_confirm != True :
+            if difference.days < 2:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_48h.append(i)
+                count += 1
+        elif i.third_confirm != True :
+            if difference.days < 1:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_24h.append(i)
+                count += 1
+    return within_72h, within_48h, within_24h, count
 
-
+def get_count(queryset):
+    within_72h, within_48h, within_24h, count = get_list_to_be_notified(queryset)
+    return count
 
 def vessel_listview(request):
-    
     if request.method == "POST":
         form = VesselArrivalDetailsForm(request.POST)
         form_one = VesselDetailsForm(request.POST)
@@ -23,21 +61,17 @@ def vessel_listview(request):
     
     template_name='shipping_line/vessel_details.html'
     queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
+    count = get_count(queryset)
     context = {
         "object_list":queryset,
         'form':form,
-        'form_one':form_one
+        'form_one':form_one,
+        'count' : count
     }
     return render(request, template_name ,context)
 
-def vessel_timestamp(request):
-    template_name='shipping_line/vessel_timestamp.html'
-    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
-    context = {
-        "object_list":queryset,
-        'time':datetime.now()
-    }
-    return render(request, template_name ,context)
+def notification(request):
+    pass
 
 
 def remove_arrival(request,item_id=None):
@@ -65,9 +99,7 @@ def edit_arrival(request,item_id=None):
         }
         return render(request, template_name ,context)
 
-
-
-
+#this must be taken from chamath
 def berth_schedule(request):
     template_name='shipping_line/berth_schedule.html'
     context = {
@@ -117,5 +149,46 @@ def view_history(request):
         }
         return render(request, template_name ,context)
 
-def get_list_to_be_notified():
-    pass
+
+def vessel_timestamp(request):
+    template_name='shipping_line/vessel_timestamp.html'
+    time = datetime.now()
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
+    within_72h = []
+    within_48h = []
+    within_24h = []
+    for i in queryset:
+        absolute_date = datetime(
+                day = i.eta.day,
+                month = i.eta.month,
+                year = i.eta.year,
+                hour = i.eta.hour,
+                minute = i.eta.minute
+        )
+        difference = absolute_date - time
+        if i.first_confirm != True :
+            if difference.days < 3:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_72h.append(i)
+        elif i.second_confirm != True :
+            if difference.days < 2:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_48h.append(i)
+        elif i.third_confirm != True :
+            if difference.days < 1:
+                item = VesselArrival.objects.get(id=i.id)       
+                item.delete()
+            else:
+                within_24h.append(i)
+         
+        
+    context = {
+        "object_list":queryset,
+        'time':datetime.now(),
+        'obj' :within_72h
+    }
+    return render(request, template_name ,context)
