@@ -18,6 +18,7 @@ class Vessel(models.Model):
     vessel_name = models.CharField(max_length=200, unique=True)
     vessel_loa = models.DecimalField(max_digits=6, decimal_places=2)
     vessel_status = models.CharField(choices=VESSEL_STATUS_CHOICES,  max_length=2)
+    author = models.ForeignKey('accounts.ShippingAgent', null=True, blank=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.vessel_name)
