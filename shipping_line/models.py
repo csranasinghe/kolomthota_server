@@ -40,7 +40,7 @@ class VesselArrival(models.Model):
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
 
-    ref_no = models.CharField(max_length=100)
+    ref_no = models.CharField(max_length=100, unique= True)
     draft_arrival = models.DecimalField(max_digits=4, decimal_places=2)
     draft_departure = models.DecimalField(max_digits=4, decimal_places=2)
     remarks = models.TextField(null=True, blank=True)

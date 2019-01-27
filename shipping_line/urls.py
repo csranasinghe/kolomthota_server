@@ -5,7 +5,8 @@ from .views import (
     view_history,
     remove_arrival,
     edit_arrival,
-    vessel_timestamp
+    vessel_timestamp,
+    edit_arrival_done
 )
 
 urlpatterns = [
@@ -14,5 +15,6 @@ urlpatterns = [
     url('^berth-schedule/$', berth_schedule, name="berthSchedule"),
     url('^history/$', view_history, name="viewHistory"),
     url('^remove_items/(?P<item_id>[0-9]+)/$', remove_arrival, name="remove_arrival"),
-    url('^edit_vessels/(?P<item_id>[0-9]+)/$', edit_arrival, name="edit_arrival")
+    url('^edit_vessels/(?P<item_id>[0-9]+)/$', edit_arrival, name="edit_arrival"),
+    url('^edit_vessels/(?P<item_id>[0-9]+)/edit/$', edit_arrival_done, name="edit_arrival_done")
 ]

@@ -3,49 +3,49 @@
 
 {% block content_middle %}
 <h1 style=" text-align: center" class="py-5">{{ request.user.sa_account.shipping_line }} vessel history</h1>
-        
-</div>    
+
+</div>
 <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Shipping Line Agent</th>
-        <th>ETA</th>
-        <th>dis</th>
-        <th>load</th>
-        <th>ref_no</th>
-        <th>draft_arrival</th>
-        <th>draft_diparture</th>
-        <th>remarks</th>
-        <th>service</th>
-        <th>lastport</th>
-        <th>nextport</th>
-        <th>vessel</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for obj in object_list %}
-        {% if obj.shipping_agent.shipping_line == request.user.sa_account.shipping_line  %} 
-        <td>{{obj.shipping_agent}}</td>
-        <td>{{obj.eta}}</td>
-        <td>{{obj.dis}}</td>
-        <td>{{obj.load}}</td>
-        <td>{{obj.ref_no}}</td>
-        <td>{{obj.draft_arrival}}</td>
-        <td>{{obj.draft_departure}}</td>
-        <td>{{obj.remarks}}</td>
-        <td>{{obj.service}}</td>
-        <td>{{obj.last_port}}</td>
-        <td>{{obj.next_port}}</td>
-        <td>{{obj.vessel}}</td>
-        {% endif %}
+  <thead>
+    <tr>
+      <th>Shipping Line Agent</th>
+      <th>ETA</th>
+      <th>dis</th>
+      <th>load</th>
+      <th>ref_no</th>
+      <th>draft_arrival</th>
+      <th>draft_diparture</th>
+      <th>remarks</th>
+      <th>service</th>
+      <th>lastport</th>
+      <th>nextport</th>
+      <th>vessel</th>
     </tr>
-      
-      {% endfor %}
-    </tbody>
-  </table>
+  </thead>
+  <tbody>
+    {% for obj in object_list %}
+    {% if obj.shipping_agent.shipping_line == request.user.sa_account.shipping_line %}
+    <td>{{obj.shipping_agent}}</td>
+    <td>{{obj.eta}}</td>
+    <td>{{obj.dis}}</td>
+    <td>{{obj.load}}</td>
+    <td>{{obj.ref_no}}</td>
+    <td>{{obj.draft_arrival}}</td>
+    <td>{{obj.draft_departure}}</td>
+    <td>{{obj.remarks}}</td>
+    <td>{{obj.service}}</td>
+    <td>{{obj.last_port}}</td>
+    <td>{{obj.next_port}}</td>
+    <td>{{obj.vessel}}</td>
+    {% endif %}
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
 
 
 
 
-  
+
 {% endblock content_middle %}

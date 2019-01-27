@@ -80,24 +80,14 @@ def remove_arrival(request,item_id=None):
     return redirect('/')
 
 def edit_arrival(request,item_id=None):
-    if request.method == "POST":
-        form_value = VesselArrivalDetailsForm(request.POST)
-        if form_value.is_valid():
-            vessel = VesselArrival.objects.get(id=item_id)
-            form_value = VesselArrivalDetailsForm(request.POST, instance = vessel)
-            form_value.save()
-            return redirect('/')
-        else:
-            return redirect('/')
-    else:
-        vessel = VesselArrival.objects.get(id=item_id)
-        form_value = VesselArrivalDetailsForm(instance = vessel)
-        template_name='shipping_line/edit_details.html'
-        context = {
-            'vessel':vessel,
-            'form':form_value
-        }
-        return render(request, template_name ,context)
+    vessel = VesselArrival.objects.get(id=item_id)
+    form_value = VesselArrivalDetailsForm(instance = vessel)
+    template_name='shipping_line/edit_details.html'
+    context = {
+       'vessel':vessel,
+        'form':form_value
+    }
+    return render(request, template_name ,context)
 
 #this must be taken from chamath
 def berth_schedule(request):
@@ -192,3 +182,36 @@ def vessel_timestamp(request):
         'obj' :within_72h
     }
     return render(request, template_name ,context)
+
+def edit_arrival_done(request,item_id=None):
+    if request.method=="GET":
+        eta_new = request.GET.get('eta')
+        dis_new = request.GET.get('dis')
+        load_new = request.GET.get('load')
+        draft_arrival_new = request.GET.get('draft_arrival')
+        draft_departure_new = request.GET.get('draft_departure')
+        service_new = request.GET.get('service')
+        
+        vessel = VesselArrival.objects.get(id=item_id)
+        if(eta_new != ""):
+            eta_datetime = datetime(
+                day = int(eta_new[8:10]),
+                month = int(eta_new[5:7]),
+                year = int(eta_new[0:4]),
+                hour = int(eta_new[11:13]),
+                minute = int(eta_new[14:16])
+            )
+            vessel.eta = eta_datetime
+        if(dis_new != "" ):
+            vessel.dis = int(dis_new)
+        if(load_new != "" ):
+            vessel.load = int(load_new)
+        if(draft_arrival_new != ""):
+            vessel.draft_arrival = float(draft_arrival_new)
+        if(draft_departure_new != ""):
+            vessel.draft_departure = float(draft_departure_new)
+        if(service_new != ""):
+            vessel.service = service_new
+        vessel.save()
+
+    return redirect('/')
