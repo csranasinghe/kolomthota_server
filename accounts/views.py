@@ -96,9 +96,7 @@ def register(request):
             }
             return render(request, 'accounts/company_select.html', context)
         else:
-            form = CustomUserCreationForm()
-            args = {'form': form}
-            return render(request, 'accounts/reg_form.html', args)
+            return render(request, 'accounts/register_warning.html', )
     else:
         form = CustomUserCreationForm()
 
