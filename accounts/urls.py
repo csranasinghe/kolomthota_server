@@ -10,7 +10,8 @@ from .views import (
     register ,
     view_profile ,
     edit_profile ,
-    change_password
+    change_password,
+    register_company
 )
 from django.contrib.auth import views as auth_views
 
@@ -21,5 +22,6 @@ urlpatterns = [
     url('^register/$',register,name='register'),
     url('^profile/$',view_profile,name='viewProfile'),
     url('^profile/edit/$',edit_profile ,name = "editProfile" ),
-    url('^change-password/$', change_password ,name = "changePassword" )
+    url('^change-password/$', change_password ,name = "changePassword" ),
+    url('^register/company/$', register_company, name = "register_company")
 ]

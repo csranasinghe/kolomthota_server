@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static " accounts/css/login.css" %}">
+{% endblock extra_head %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/login.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content_main %}
+<h1>Welcome {{person}}</h1>
+
+<form method="GET" action="company">
+
+    {% csrf_token %}
+
+    <ul>
+        <p>Please choose Your company</p>
+        <li style="display: none"><input type="text" name="shipping_agent" id="id_shipping_agent"
+            value="{{ person.id }}"></input></li>
+        
+        <select name="optradio">
+                {% for com in company %}
+                <option value="{{com}}">{{com}}</option>
+                
+                {% endfor %}
+              </select>
+        
+        
+    </ul>
+
+    <br />
+    <button type="submit" class="btn btn-info" value="Save">Submit</button>
+</form>
+{% endblock content_main %}

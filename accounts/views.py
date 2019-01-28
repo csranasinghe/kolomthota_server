@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm ,UserChangeForm ,PasswordChangeForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import update_session_auth_hash
@@ -10,7 +10,9 @@ from django.views import View
 from django.views.generic import CreateView
 from django.shortcuts import render,redirect
 from .forms import CustomUserCreationForm ,EditProfileForm 
-from .models import ShippingAgent
+from .models import ShippingAgent,Account
+from shipping_line.models import ShippingLine
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -84,8 +86,15 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            data = request.POST.get('email')
             form.save()
-            return HttpResponseRedirect(reverse('accounts:login'))
+            person=Account.objects.filter(email = data)
+            company = ShippingLine.objects.all()
+            context = {
+                'person':person[0],
+                'company':company
+            }
+            return render(request, 'accounts/company_select.html', context)
         else:
             form = CustomUserCreationForm()
             args = {'form': form}
@@ -96,6 +105,16 @@ def register(request):
         args = {'form': form}
         return render(request, 'accounts/reg_form.html', args)
 
+def register_company(request):
+    if request.method == 'GET':
+        account_new = request.GET.get('shipping_agent')
+        shipping_line_new = request.GET.get('optradio')
+        #user = Account.objects.get(id=int(account_new))
+        ShippingAgent.objects.create(
+            account = Account.objects.get(id=int(account_new)), 
+            shipping_line = ShippingLine.objects.get(name=shipping_line_new)
+        )
+        return HttpResponseRedirect(reverse('accounts:login'))
     
 #
 # class RegisterSLAView(CreateView):
