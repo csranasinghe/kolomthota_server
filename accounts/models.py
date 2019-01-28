@@ -13,7 +13,7 @@ class Account(AbstractUser):
         ('DM', 'Duty Manager'),
         ('VP', 'Vessel Planner'),
     )
-    user_type = models.CharField(choices=USER_TYPE_CHOICES,  default='SA', max_length=10)
+    user_type = models.CharField(choices=USER_TYPE_CHOICES,  default='SA', max_length=10, blank = True)
     REQUIRED_FIELDS = AbstractUser.REQUIRED_FIELDS + ['first_name', 'last_name', 'user_type']
 
     def __str__(self):
