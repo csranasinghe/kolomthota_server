@@ -47,6 +47,31 @@ def get_count(queryset):
     within_72h, within_48h, within_24h, count = get_list_to_be_notified(queryset)
     return count
 
+def notification(request):
+    template_name = 'shipping_line/notification.html'
+    queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
+    within_72h, within_48h, within_24h, count = get_list_to_be_notified(queryset)
+    context = {
+        'within_72h': within_72h,
+        'within_48h': within_48h,
+        'within_24h':within_24h,
+        'count':count,
+        'time':datetime.now(),
+    }
+    return render(request, template_name ,context)
+
+def notification_confirm(request,item_id=None):
+    item = VesselArrival.objects.get(id=item_id)
+    if not item.first_confirm:       
+        item.first_confirm = True 
+    elif not item.second_confirm:
+        item.second_confirm = True
+    elif not item.third_confirm:
+        item.third_confirm = True
+    item.save()
+    return redirect('/shipping-line/notification/')
+
+
 def vessel_listview(request):
     if request.method == "POST":
         form = VesselArrivalDetailsForm(request.POST)
@@ -107,14 +132,16 @@ def edit_vessel(request,item_id=None):
     }
     return render(request, template_name ,context)
 
-def notification(request):
-    pass
-
 
 def remove_arrival(request,item_id=None):
     item = VesselArrival.objects.get(id=item_id)       
     item.delete()
     return redirect('/')
+
+def remove_arrival_two(request,item_id=None):
+    item = VesselArrival.objects.get(id=item_id)       
+    item.delete()
+    return redirect('/shipping-line/notification/')
 
 def edit_arrival(request,item_id=None):
     vessel = VesselArrival.objects.get(id=item_id)

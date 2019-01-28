@@ -1,0 +1,212 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+{{within_42h}}
+<div class="row">
+    <div class="col-sm-2">
+
+    </div>
+    <div class="col-sm-8">
+
+        {% if within_24h %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan="8">Confirm within 24 hours</th>
+
+                </tr>
+            </thead>
+            <thead class="thead-light">
+                <tr>
+                    <th>Shipping Line Agent</th>
+                    <th>vessel</th>
+                    <th>ETA</th>
+                    <th>dis</th>
+                    <th>load</th>
+                    <th>ref_no</th>
+                    <th>confirm</th>
+                    <th>delete</th>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for obj in within_24h %}
+                    <td>{{obj.shipping_agent}}</td>
+                    <td>{{obj.vessel}}</td>
+                    <td>{{obj.eta}}</td>
+                    <td>{{obj.dis}}</td>
+                    <td>{{obj.load}}</td>
+                    <td>{{obj.ref_no}}</td>
+                    <td>
+                            <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/notification/{{obj.id}}';"
+                            value="confirm" />
+                    </td>
+
+                    <td>
+                            <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
+                        </td>
+                    </tr>
+    
+                    <div class="modal fade" id="myModal4">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+    
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 style="text-align:center" class="modal-title">Delete</h4>
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                </div>
+    
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <h4>Are you sure ?</h4>
+                                    <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items_two/{{obj.id}}';">Yes</button>
+                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+                                </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if within_48h %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan="8">Confirm within 48 hours</th>
+
+                </tr>
+            </thead>
+            <thead class="thead-light">
+                <tr>
+                    <th>Shipping Line Agent</th>
+                    <th>vessel</th>
+                    <th>ETA</th>
+                    <th>dis</th>
+                    <th>load</th>
+                    <th>ref_no</th>
+                    <th>confirm</th>
+                    <th>delete</th>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for obj in within_48h %}
+                    <td>{{obj.shipping_agent}}</td>
+                    <td>{{obj.vessel}}</td>
+                    <td>{{obj.eta}}</td>
+                    <td>{{obj.dis}}</td>
+                    <td>{{obj.load}}</td>
+                    <td>{{obj.ref_no}}</td>
+                    <td>
+                    <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/notification/{{obj.id}}';"
+                        value="confirm" />
+                    </td>
+                    <td>
+                            <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
+                        </td>
+                    </tr>
+    
+                    <div class="modal fade" id="myModal4">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+    
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 style="text-align:center" class="modal-title">Delete</h4>
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                </div>
+    
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <h4>Are you sure ?</h4>
+                                    <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items_two/{{obj.id}}';">Yes</button>
+                                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+                                </div>
+    
+    
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if within_72h %}
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th colspan="8">Confirm within 72 hours</th>
+
+                </tr>
+            </thead>
+            <thead class="thead-light">
+                <tr>
+                    <th>Shipping Line Agent</th>
+                    <th>vessel</th>
+                    <th>ETA</th>
+                    <th>dis</th>
+                    <th>load</th>
+                    <th>ref_no</th>
+                    <th>confirm</th>
+                    <th>delete</th>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for obj in within_72h %}
+                    <td>{{obj.shipping_agent}}</td>
+                    <td>{{obj.vessel}}</td>
+                    <td>{{obj.eta}}</td>
+                    <td>{{obj.dis}}</td>
+                    <td>{{obj.load}}</td>
+                    <td>{{obj.ref_no}}</td>
+                    <td>
+                        <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/notification/{{obj.id}}';"
+                        value="confirm" />
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="myModal4">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 style="text-align:center" class="modal-title">Delete</h4>
+                                <button type="button" class="close" data-dismiss="modal">×</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <h4>Are you sure ?</h4>
+                                <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items_two/{{obj.id}}';">Yes</button>
+                                <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </tbody>
+        </table>
+        {% endif %}
+
+
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+
+{% endblock content_middle %}

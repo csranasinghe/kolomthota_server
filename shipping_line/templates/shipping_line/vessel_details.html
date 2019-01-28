@@ -2,6 +2,11 @@
 
 {% load static %}
 
+{% block extra_refresh %} 
+<meta http-equiv="refresh" content="300">
+{% endblock extra_refresh %}
+
+
 {% block extra_head %}
 {{block.super}}
 <link rel="stylesheet" href="{% static " shipping_line/css/notification.css" %}">
@@ -27,14 +32,13 @@
   </button>
 </div>
 
-<button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#myModal3">
+<button type="button" class="btn btn-lg btn-info" onclick="location.href='/shipping-line/notification/';">
   <i class="fa fa-bell">
-    <span class="fa fa-comment"></span>
-    <span class="num">{{count}}</span>
+    <span class="batch">{{count}}</span>
   </i>
 </button></td>
 <button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#myModal3">
-  <i class="fa fa-search "></i>
+  <i class="fa fa-search " ></i>
 </button></td>
 
 
