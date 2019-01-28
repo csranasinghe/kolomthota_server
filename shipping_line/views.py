@@ -70,6 +70,43 @@ def vessel_listview(request):
     }
     return render(request, template_name ,context)
 
+def vessel_info_details(request):
+    template_name='shipping_line/vessel_info_details.html'
+    queryset = Vessel.objects.all()
+    context = {
+        "object_list":queryset
+    }
+    return render(request, template_name ,context)
+
+def remove_vessel(request,item_id=None):
+    queryset = VesselArrival.objects.filter(vessel = item_id )
+    if not queryset:
+        item = Vessel.objects.get(id=item_id)       
+        item.delete()
+        return redirect('/shipping-line/vessel-details/')
+    else:
+        return redirect('/shipping-line/delete-warning/')
+
+def connot_remove_vessel(request,item_id=None):
+    queryset = Vessel.objects.filter(vessel = item_id )
+    queryset2 = VesselArrival.objects.filter(vessel = item_id )
+    template_name = 'shipping_line/delete_warning.html'
+    context = {
+        "object_list":queryset,
+        "object_list2":queryset2
+    }
+    return render(request, template_name, context)
+
+def edit_vessel(request,item_id=None):
+    vessel = Vessel.objects.get(id=item_id)
+    form_value = VesselDetailsForm(instance = vessel)
+    template_name='shipping_line/edit_vessel.html'
+    context = {
+       'vessel':vessel,
+        'form':form_value
+    }
+    return render(request, template_name ,context)
+
 def notification(request):
     pass
 
@@ -182,6 +219,21 @@ def vessel_timestamp(request):
         'obj' :within_72h
     }
     return render(request, template_name ,context)
+
+def edit_vessel_done(request,item_id=None):
+    if request.method=="GET":
+        vessel_loa_new = request.GET.get('vessel_loa')
+        vessel_status_new = request.GET.get('vessel_status')
+        author_new = request.GET.get('author')
+
+        vessel = Vessel.objects.get(id=item_id)
+        if(vessel_loa_new != ""):
+            vessel.vessel_loa = float(vessel_loa_new)
+        if(vessel_status_new != ""):
+            vessel.vessel_status = vessel_status_new[0:1]
+        vessel.save()
+    
+    return redirect('/shipping-line/vessel-details/')
 
 def edit_arrival_done(request,item_id=None):
     if request.method=="GET":

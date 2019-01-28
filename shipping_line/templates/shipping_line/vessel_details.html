@@ -22,7 +22,7 @@
 
     <i class="fa fa-plus"></i>
   </button>
-  <button type="button" class="btn btn-info">
+  <button type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';">
     <i class="fa fa-pencil"></i>
   </button>
 </div>
@@ -163,6 +163,8 @@
             <li>{{form_one.vessel_name.label_tag}} {{form_one.vessel_name}}</li>
             <li>{{form_one.vessel_status.label_tag}} {{form_one.vessel_status}}</li>
             <li>{{form_one.vessel_loa.label_tag}} {{form_one.vessel_loa}}</li>
+            <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author"
+              value="{{ request.user.id }}"></input></li>
           </ul>
 
           <br />

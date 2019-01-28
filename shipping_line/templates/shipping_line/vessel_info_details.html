@@ -1,0 +1,44 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+<h1 style=" text-align: center" class="py-5"> {{ request.user.sa_account.shipping_line }} Vessel Details </h1>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Vessel Name</th>
+            <th>LOA</th>
+            <th>Status</th>
+            <th>Edit Details</th>
+            <th>Delete Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in object_list %}
+        {% if obj.author.shipping_line == request.user.sa_account.shipping_line %}
+        <td>{{obj.vessel_name}}</td>
+        <td>{{obj.vessel_loa}}</td>
+        <td>{{obj.vessel_status}}</td>
+        <td>
+            <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit-vessel/{{obj.id}}';"
+        value="Edit" />
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove-vessel/{{obj.id}}';">Delete</button>
+          </td>
+          
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+
+
+
+{% endblock content_middle %}

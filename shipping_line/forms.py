@@ -21,7 +21,8 @@ class VesselDetailsForm(ModelForm):
         fields = [
             'vessel_name',
             'vessel_loa',
-            'vessel_status'
+            'vessel_status',
+            'author'
         ]
 
 

@@ -1,0 +1,12 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+<div class="alert alert-danger">
+    Cannot delete vessel because it is already in vessel arival
+</div>  
+<div>
+    <input type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';" value="Go Back" />
+</div>
+
+{% endblock content_middle %}
