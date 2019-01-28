@@ -16,3 +16,7 @@ class VesselProgress(models.Model):
     load = models.IntegerField(default=0)
     def __str__(self):
         return str(self.vessel)
+
+    @property
+    def vessel_shipping_line(self):
+        return self.vessel.shipping_agent.shipping_line

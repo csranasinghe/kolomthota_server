@@ -1,0 +1,15 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+
+<div>
+{%for item in item%}
+{{item.vessel}}
+{{item.load}}
+{{item.dis}}
+{% endfor %}
+<input type="button" class="btn btn-info" onclick="location.href='/';" value="Go Back" />
+</div>
+
+{% endblock content_middle %}

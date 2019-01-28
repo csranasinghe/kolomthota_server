@@ -14,7 +14,9 @@ from .views import (
     edit_vessel,
     edit_vessel_done,
     notification,
-    notification_confirm
+    notification_confirm,
+    vessel_progress,
+    vessel_no_progress
 
 )
 
@@ -34,4 +36,6 @@ urlpatterns = [
     url('^edit-vessel/(?P<item_id>[0-9]+)/edit_vessel/$', edit_vessel_done, name="edit_vessel_done"),
     url('^notification/$', notification, name = 'notification'),
     url('^notification/(?P<item_id>[0-9]+)/$', notification_confirm, name="notification_confirm"),
+    url('^vessel-progress/(?P<item_id>[0-9]+)/$', vessel_progress, name='vessel_progress'),
+    url('^vessel-no-progress/$', vessel_no_progress, name='vessel_no_progress')
 ]

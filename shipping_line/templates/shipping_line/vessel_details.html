@@ -65,7 +65,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for obj in object_list %}
+    {% for obj in object_list %} 
     <td>{{obj.shipping_agent}}</td>
     <td>{{obj.eta}}</td>
     <td>{{obj.dis}}</td>
@@ -79,9 +79,9 @@
     <td>{{obj.next_port}}</td>
     <td>{{obj.vessel}}</td>
     <td>
-      <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">View</button>
+      <button type="button" class="btn btn-outline-success" onclick="location.href='/shipping-line/vessel-progress/{{obj.id}}';">{{obj.id}}</button>
     </td>
-
+    
     <td>
       <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
         value="Edit" />
@@ -127,7 +127,7 @@
 
           <!-- Modal body -->
           <div class="modal-body">
-            <h4>This option is under development.</h4>
+              <h4>{{obj.ref_no}}</h4>
           </div>
 
           <!-- Modal footer -->

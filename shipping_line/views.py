@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .forms import VesselArrivalDetailsForm,VesselDetailsForm
 from .models import ShippingLine,VesselArrival,Vessel
+from vessel_planner.models import VesselProgress
 from datetime import datetime
 from datetime import timedelta
 from django.http import HttpResponse
@@ -86,12 +87,14 @@ def vessel_listview(request):
     
     template_name='shipping_line/vessel_details.html'
     queryset = VesselArrival.objects.filter(shipping_agent=request.user.id).order_by('-eta')
+    queryset2 = VesselProgress.objects.all()
     count = get_count(queryset)
     context = {
         "object_list":queryset,
         'form':form,
         'form_one':form_one,
-        'count' : count
+        'count' : count,
+        'vessel': queryset2
     }
     return render(request, template_name ,context)
 
@@ -112,13 +115,27 @@ def remove_vessel(request,item_id=None):
     else:
         return redirect('/shipping-line/delete-warning/')
 
-def connot_remove_vessel(request,item_id=None):
-    queryset = Vessel.objects.filter(vessel = item_id )
-    queryset2 = VesselArrival.objects.filter(vessel = item_id )
+def connot_remove_vessel(request):
     template_name = 'shipping_line/delete_warning.html'
     context = {
-        "object_list":queryset,
-        "object_list2":queryset2
+    }
+    return render(request, template_name, context)
+
+
+def vessel_progress(request,item_id=None):
+     item = VesselProgress.objects.filter(vessel=item_id)
+     template_name = 'shipping_line/vessel_progress.html'
+     context = {
+         'item': item
+     }
+     if not item :
+        return redirect('/shipping-line/vessel-no-progress/')
+
+     return render(request, template_name, context)
+
+def vessel_no_progress(request):
+    template_name = 'shipping_line/vessel_no_progress.html'
+    context = {
     }
     return render(request, template_name, context)
 
