@@ -3,6 +3,7 @@ from shipping_line.models import VesselArrival
 from .models import Messages , VesselProgress
 from .forms import MessageSend ,VesselProgressForm
 from django.views.generic import UpdateView
+from django.http import HttpResponse
 
 # Create your views here.
 def vessel_dashboard(request):
@@ -28,14 +29,16 @@ def vessel_dashboard(request):
 
 def progress(request,item_id=None):
     if request.method == "POST":
-        form_value = VesselProgressForm(request.POST)   
-        if form_value.is_valid():
-            progress = VesselProgress.objects.get(id=item_id)
-            form_value = VesselProgressForm(request.POST, instance = progress)
-            form_value.save()
-            return redirect('/')
-        else:
-            return redirect('/')
+        form_value = VesselProgressForm(request.POST) 
+        dis_new = request.POST.get('dis')
+        load_new = request.POST.get('load')
+        progress = VesselProgress.objects.get(id=item_id)
+        if(dis_new != ""):
+            progress.dis = int(dis_new)
+        if(load_new != ""):
+            progress.load = int(load_new)
+        progress.save()
+        return redirect('/')
     else:
         progress = VesselProgress.objects.get(id=item_id)
         form_value = VesselProgressForm(instance = progress)

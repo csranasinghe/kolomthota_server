@@ -11,7 +11,7 @@ class Messages(models.Model):
         return str(self.created_time)
 
 class VesselProgress(models.Model):
-    vessel = models.ForeignKey('shipping_line.VesselArrival', on_delete=models.CASCADE)
+    vessel = models.ForeignKey('shipping_line.VesselArrival', on_delete=models.CASCADE ,unique =True)
     dis = models.IntegerField(default=0)
     load = models.IntegerField(default=0)
     def __str__(self):
