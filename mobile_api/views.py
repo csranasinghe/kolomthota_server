@@ -1,3 +1,4 @@
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework.viewsets import ModelViewSet
@@ -69,6 +70,45 @@ class CheckUsernameAPIView(APIView):
                 return Response({'msg': 'The username already exists.'})
         return Response({'msg': "Bad request."}, status.HTTP_400_BAD_REQUEST)
 
+
+class PublishedScheduleAPIView(APIView):
+    """
+    API view to get the published schedule
+    """
+    def get(self, request):
+        return Response({'from': "2019-01-29", 'to': "2019-01-31", 'schedule': [
+            {
+                "id": 9,
+                "eta": "2019-01-30T14:30:46Z",
+                "etb": "2019-01-30T15:30:46Z",
+                "etc": "2019-01-31T15:30:46Z",
+                "berth_no": "1MN",
+                "dis": 200,
+                "load": 700,
+                "ref_no": "MOEI905AJ",
+                "remarks": "MSC,TO SHIFFTED TO 1MS ARR:1700-29/01",
+                "service": "CC",
+                "vessel_status": "M",
+                "vessel_loa": "150",
+                "vessel_name": "msa1",
+
+            }, {
+                "id": 10,
+                "eta": "2019-01-31T15:30:46Z",
+                "etb": "2019-01-31T17:30:46Z",
+                "etc": "2019-02-01T15:30:46Z",
+                "berth_no": "UCT2",
+                "dis": 1002,
+                "load": 0,
+                "ref_no": "MSLV901RJ",
+                "remarks": "13 ACROSS DFT 8.9M",
+                "service": "IMED",
+                "vessel_status": "F",
+                "vessel_loa": "241",
+                "vessel_name": "MSC LEVINA",
+
+            },
+        ]})
 
 class Logout(APIView):
     """
