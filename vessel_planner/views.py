@@ -1,27 +1,22 @@
 from django.shortcuts import render ,redirect ,get_object_or_404
 from shipping_line.models import VesselArrival
-from .models import Messages , VesselProgress
-from .forms import MessageSend ,VesselProgressForm
+from .models import  VesselProgress
+from .forms import VesselProgressForm
 from django.views.generic import UpdateView
 from django.http import HttpResponse
 
 # Create your views here.
 def vessel_dashboard(request):
     if request.method == "POST":
-        form = MessageSend(request.POST)
         form_one = VesselProgressForm(request.POST)
-        if form.is_valid():
-            form.save()
-        elif form_one.is_valid():
+        if form_one.is_valid():
             form_one.save()
     else:
-        form = MessageSend()
         form_one = VesselProgressForm()
     
     queryset = VesselProgress.objects.all()
     template_name='vessel_planner/dashboard.html'
     context = {
-        'form':form,
         "object_list":queryset,
         'form_one':form_one
     }

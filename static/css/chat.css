@@ -519,7 +519,7 @@ body {
 #frame .content .contact-profile .social-media {
   float: right;
 }
-#frame .content .contact-profile .social-media i {
+#frame .content .contact-profile .social-media button {
   margin-left: 14px;
   cursor: pointer;
 }

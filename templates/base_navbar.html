@@ -9,7 +9,16 @@
                 Kolomthota
             </a>
              <ul class="nav navbar-nav navbar-right">
+                {% if request.user.user_type == 'BP' or request.user.user_type == 'VP' or request.user.user_type == 'DM'  %}
+                    <li class="nav-item">
+                            <a class="nav-link" href="/chat/groupchat" >
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                           </a>
+                            
+                     </li>
+                     {% endif %}
                  {% if request.user.user_type == 'BP' %}
+                 
                  <li class="nav-item">
                      <a class="nav-link" href="{% url "berth_planner:vessel_arrivals" %}" >
                Vessel Arrivals

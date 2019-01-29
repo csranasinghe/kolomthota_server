@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Messages ,VesselProgress
+from .models import VesselProgress
 
 
 # Register your models here.
-admin.site.register(Messages)
 admin.site.register(VesselProgress)

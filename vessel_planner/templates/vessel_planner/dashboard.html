@@ -2,9 +2,7 @@
 
 
 {% block content_middle %}
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Add Message
-      </button>
+
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">
             Add Vessel In Progress
           </button>
@@ -41,36 +39,7 @@
 
 
       <!-- The Modal -->
-      <div class="modal" id="myModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
       
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Message</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-      
-            <!-- Modal body -->
-            <div class="modal-body">
-                    <form method="POST" action="">
-                            {% csrf_token %}
-                                  <ul>
-                                  <li>{{form.message_author.label_tag}}  {{form.message_author}}</li>
-                                  <li>{{form.message.label_tag}}  {{form.message}}</li>
-                                  </ul>
-          
-                                <br/>
-                             <button type="submit" class="btn btn-info" value="Save">Submit</button>
-                        </form>
-            </div>
-      
-            <!-- Modal footer -->
-            
-      
-          </div>
-        </div>
-      </div>
 
       <div class="modal" id="myModal2">
             <div class="modal-dialog">
