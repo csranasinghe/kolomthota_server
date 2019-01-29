@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'shipping_line',
     'mobile_api',
     'vessel_planner',
-    'widget_tweaks'
+    'widget_tweaks',
+    'chat',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +85,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'kolomthota_server.wsgi.application'
+ASGI_APPLICATION = 'kolomthota_server.routing.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 DATABASES = {
