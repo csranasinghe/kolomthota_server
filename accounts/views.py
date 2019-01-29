@@ -73,13 +73,14 @@ def change_password(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
+            messages.success(request, 'Your password was successfully updated!')
             return redirect('/profile')
         else:
-            return redirect('accounts/change_password.html')
-    else:
-        form = PasswordChangeForm(user=request.user)
-        content = {'form':form}
-        return render(request, 'accounts/change_password.html', content)
+            messages.error(request, 'Please correct the error below.')
+    
+    form = PasswordChangeForm(user=request.user)
+    content = {'form':form}
+    return render(request, 'accounts/change_password.html', content)
 
 
 def register(request):
