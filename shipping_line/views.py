@@ -23,27 +23,31 @@ def get_list_to_be_notified(queryset):
                 minute = i.eta.minute
         )
         difference = absolute_date - time
-        if i.first_confirm != True :
-            if difference.days < 3:
-                item = VesselArrival.objects.get(id=i.id)       
-                item.delete()
-            else:
-                within_72h.append(i)
-                count += 1
-        elif i.second_confirm != True :
-            if difference.days < 2:
-                item = VesselArrival.objects.get(id=i.id)       
-                item.delete()
-            else:
-                within_48h.append(i)
-                count += 1
-        elif i.third_confirm != True :
-            if difference.days < 1:
-                item = VesselArrival.objects.get(id=i.id)       
-                item.delete()
-            else:
-                within_24h.append(i)
-                count += 1
+        if i.is_rejected_user == False and i.is_rejected_BP == False:
+            if i.first_confirm != True :
+                if difference.days < 3:
+                    item = VesselArrival.objects.get(id=i.id)       
+                    item.is_rejected_user = True
+                    item.save()
+                else:
+                    within_72h.append(i)
+                    count += 1
+            elif i.second_confirm != True :
+                if difference.days < 2:
+                    item = VesselArrival.objects.get(id=i.id)       
+                    item.is_rejected_user = True
+                    item.save()
+                else:
+                    within_48h.append(i)
+                    count += 1
+            elif i.third_confirm != True :
+                if difference.days < 1:
+                    item = VesselArrival.objects.get(id=i.id)       
+                    item.is_rejected_user = True
+                    item.save()
+                else:
+                    within_24h.append(i)
+                    count += 1
     return within_72h, within_48h, within_24h, count
 
 def get_count(queryset):
@@ -200,15 +204,16 @@ def edit_vessel(request,item_id=None):
     }
     return render(request, template_name ,context)
 
-
 def remove_arrival(request,item_id=None):
     item = VesselArrival.objects.get(id=item_id)       
-    item.delete()
+    item.is_rejected_user = True
+    item.save()
     return redirect('/')
 
 def remove_arrival_two(request,item_id=None):
     item = VesselArrival.objects.get(id=item_id)       
-    item.delete()
+    item.is_rejected_user = True
+    item.save()
     return redirect('/shipping-line/notification/')
 
 def edit_arrival(request,item_id=None):
