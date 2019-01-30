@@ -2,9 +2,11 @@ from django.shortcuts import render,redirect
 from .forms import VesselArrivalDetailsForm,VesselDetailsForm
 from .models import ShippingLine,VesselArrival,Vessel
 from vessel_planner.models import VesselProgress
+from accounts.models import ShippingAgent
 from datetime import datetime
 from datetime import timedelta
 from django.http import HttpResponse
+from django.contrib import messages
 
 def get_list_to_be_notified(queryset):
     time = datetime.now()
@@ -76,10 +78,23 @@ def vessel_listview(request):
     if request.method == "POST":
         form = VesselArrivalDetailsForm(request.POST)
         form_one = VesselDetailsForm(request.POST)
-        if form.is_valid():
-            form.save()
-        elif form_one.is_valid():
-            form_one.save()
+        form_type = int(request.POST.get('form_type'))
+        if form_type == 1:
+            try :
+                new_vessel = Vessel.objects.create(
+                    vessel_name = request.POST.get('vessel_name'),
+                    vessel_loa = int(request.POST.get('vessel_loa')),
+                    vessel_status = (request.POST.get('vessel_status'))[0:1],
+                    author = ShippingAgent.objects.get(account_id=int(form_one.data['author']))
+                )
+                messages.success(request, 'The vessel is added' ,extra_tags='success')
+            except:
+                messages.error(request, 'The vessel is already added', extra_tags='failed')
+        elif form_type == 2:
+            
+            return HttpResponse("arrival")
+        else:
+            return redirect('/')
     else:
         form = VesselArrivalDetailsForm()
         form_one = VesselDetailsForm()
@@ -274,6 +289,8 @@ def edit_vessel_done(request,item_id=None):
         if(vessel_loa_new != ""):
             vessel.vessel_loa = float(vessel_loa_new)
         if(vessel_status_new != ""):
+            if(vessel_status_new[0:1] != 'F' or vessel_status_new[0:1] != 'M' ):
+                vessel_status_new = 'M'
             vessel.vessel_status = vessel_status_new[0:1]
         vessel.save()
     
