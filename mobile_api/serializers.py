@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from shipping_line.models import Vessel, VesselArrival, ShippingLine
+from berth_planner.models import Berth
 from accounts.models import ShippingAgent, Account
 
 
@@ -29,7 +30,31 @@ class VesselArrivalSerializer(serializers.ModelSerializer):
             'last_port',
             'next_port',
             'vessel',
-            'vessel_name'
+            'vessel_name',
+            'is_reviewed',
+            'is_rejected_user',
+            'is_rejected_BP',
+            'first_confirm',
+            'second_confirm',
+            'third_confirm'
+        )
+
+
+class UpcomingVesselArrivalsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = VesselArrival
+        fields = (
+            'id',
+            'eta',
+            'vessel',
+            'vessel_name',
+            'is_reviewed',
+            'is_rejected_user',
+            'is_rejected_BP',
+            'first_confirm',
+            'second_confirm',
+            'third_confirm'
         )
 
 
@@ -49,3 +74,9 @@ class ShippingLineSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingLine
         fields = ('id', 'name', 'email')
+
+
+class BerthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Berth
+        fields = ['id', 'name', 'max_length', 'max_across', 'max_draft', 'order']

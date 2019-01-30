@@ -1,3 +1,4 @@
+import datetime
 
 from django.shortcuts import get_object_or_404
 
@@ -5,6 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+
+from berth_planner.models import Berth
 from shipping_line.models import Vessel, VesselArrival
 from accounts.models import ShippingAgent, Account
 from .serializers import *
@@ -25,10 +28,16 @@ class VesselArrivalViewSet(ModelViewSet):
     """
     A model viewset for viewing and editing Vessel Arrival instances.
     """
+
     serializer_class = VesselArrivalSerializer
-    queryset = VesselArrival.objects.all()
     authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        a = self.request.user
+        queryset = VesselArrival.objects.filter(shipping_agent__shipping_line=a.sa_account.shipping_line)
+
+        return queryset
 
 
 class ShippingAgentAPIView(APIView):
@@ -109,6 +118,25 @@ class PublishedScheduleAPIView(APIView):
 
             },
         ]})
+
+
+class BerthsList(ListAPIView):
+    queryset = Berth.objects.all()
+    serializer_class = BerthSerializer
+
+
+class UpcomingVesselArrivals(ListAPIView):
+    serializer_class = UpcomingVesselArrivalsSerializer
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        a = self.request.user
+        queryset = VesselArrival.objects.filter(shipping_agent__shipping_line=a.sa_account.shipping_line,
+                                                eta__gte=datetime.datetime.now())
+
+        return queryset
+
 
 class Logout(APIView):
     """
