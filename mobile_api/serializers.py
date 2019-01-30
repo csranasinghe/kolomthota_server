@@ -15,7 +15,8 @@ class VesselArrivalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VesselArrival
-        read_only_fields = ('shipping_line', )
+        read_only_fields = ('shipping_line', 'is_reviewed', 'is_rejected_user', 'is_rejected_BP',
+                            'first_confirm', 'second_confirm', 'third_confirm')
         fields = (
             'id',
             'shipping_agent',

@@ -13,6 +13,7 @@ from accounts.models import ShippingAgent, Account
 from .serializers import *
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
@@ -120,11 +121,6 @@ class PublishedScheduleAPIView(APIView):
         ]})
 
 
-class BerthsList(ListAPIView):
-    queryset = Berth.objects.all()
-    serializer_class = BerthSerializer
-
-
 class UpcomingVesselArrivals(ListAPIView):
     serializer_class = UpcomingVesselArrivalsSerializer
     authentication_classes = (JSONWebTokenAuthentication, )
@@ -146,4 +142,24 @@ class Logout(APIView):
 
     def get(self, request):
         return Response({'msg': 'Successfully logged out.'})
+
+
+class BerthsList(ListAPIView):
+    queryset = Berth.objects.all()
+    serializer_class = BerthSerializer
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+
+class BerthScheduleAPIView(APIView):
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request):
+        vessel_arrival = get_object_or_404(VesselArrival, id=request.data.get('id', -1))
+        vessel_arrival.schedule_details = {'group': request.data.get('group'),
+                                           'start': request.data.get('start'),
+                                           'end': request.data.get('end')}
+        vessel_arrival.save()
+        return Response({'msg': 'Added to the schedule.'})
 

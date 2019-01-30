@@ -18,8 +18,11 @@ urlpatterns = [
     url(r'^users/sa/(?P<username_hash>[\w.@+-]+)$', CheckUsernameAPIView.as_view()),
     url(r'^shipping-lines$', ShippingLinesListAPIView.as_view()),
     url(r'^published-schedule$', PublishedScheduleAPIView.as_view()),
+    url(r'^varrivals/upcoming$', UpcomingVesselArrivals.as_view()),
+
+    # Web API endpoints
     url(r'^berths$', BerthsList.as_view()),
-    url(r'^varrivals/upcoming$', UpcomingVesselArrivals.as_view())
+    url(r'^berth-schedule$', BerthScheduleAPIView.as_view()),
 
 
 ]

@@ -108,7 +108,7 @@
 
                         <ul id="vessel-details-list" class="flex-column mb-2 ">
                             {% for varrival in vessel_arrivals %}
-                                <li id="va_{{ varrival.id }}" class="vessel-detail" draggable="true">
+                                <li id="{{ varrival.id }}" class="vessel-detail" draggable="true">
                                     <div class="vessel-div" style="width: 100%; text-align: center ;border-color: black;
                                             height: calc({{ varrival.vessel.vessel_loa }}px /2);
                                             background-color: darkblue;
@@ -181,278 +181,264 @@
 
     <script src="{% static 'js/vis.js' %}"></script>
 
-    {##}
-    {#    <!-- Drag and drop js -->#}
-    {#    <script>#}
-    {#        $(function () {#}
-    {#            $("#sortable1 li").draggable(#}
-    {#                {#}
-    {#                    containment: $('#divmain')#}
-    {#helper: 'clone'#}
-    {#                    cursor: "move",#}
-    {#                    revert: "true",#}
-    {#                    cursorAt: {top: 0, left: 0}#}
-    {#                });#}
-    {##}
-    {#            initDroppable($("#dropdiv"));#}
-    {##}
-    {#            function initDroppable($elements) {#}
-    {#                $elements.droppable({#}
-    {#                    activeClass: "ui-state-default",#}
-    {#                    hoverClass: "ui-drop-hover",#}
-    {#                    accept: ":not(.ui-sortable-helper)",#}
-    {##}
-    {#                    over: function (event, ui) {#}
-    {#                        var $this = $(this);#}
-    {#                    },#}
-    {#                    drop: function (event, ui) {#}
-    {#                        var $this = $(this);#}
-    {#                        $("<li></li>").text(ui.draggable.text()).appendTo(this);#}
-    {#                        $("#allItems").find(":contains('" + ui.draggable.text() + "')")[0].remove();#}
-    {#                    }#}
-    {#                });#}
-    {#            }#}
-    {#        });#}
-    {#    </script>#}
+
 
 
     <!-- Timeline js -->
     <script>
-        var today = new Date();
-
-        // DOM element where the Timeline will be attached
-        var container = document.getElementById('visualization');
-        var today = new Date();
-
-        // Create a DataSet (allows two way data-binding)
-        var items = new vis.DataSet([
-            {
-                id: 0,
-                group: 1,
-                align: 'center',
-                content: 'Ever Deluxe<br>\n' +
-                    '300Box/294.13M<br>\n' +
-                    'Jan. 30, 2019, noon (dfgdfg)\n',
-                style: "width: 100%; text-align: center ;border-color: black;color: white; height: calc(294.13px /2)",
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-            },
-            {
-                id: 1,
-                group: 3,
-                align: 'center',
-                content: 'item 1',
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
-            },
-            {
-                id: 2,
-                group: 2,
-                align: 'center',
-                content: 'item 2',
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-            },
-            {
-                id: 3,
-                group: 4,
-                align: 'center',
-                content: 'item 3',
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-            },
-            {
-                id: 4,
-                group: 5,
-                align: 'center',
-                content: 'item 4',
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
-            },
-            {
-                id: 5,
-                group: 6,
-                align: 'center',
-                content: 'item 5',
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-            }
-        ]);
-
-        // Configuration for the Timeline
-        var options = {
-            showCurrentTime: true,
-            stack: false,
-            start: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),
-            verticalScroll: true,
-            end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4),
-            margin: {
-                item: {
-                    vertical: 26, // Distance between two bollards
-                    horizontal: 0
+        function getAjaxData(url) {
+            var tmp = null;
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'contentType': "application/json; charset=utf-8",
+                'dataType': "json",
+                'url': url,
+                'success': function (data) {
+                    tmp = data;
                 }
-            },
-            zoomable: false,  // false
-            'orientation': {
-                'axis': 'top'
-            },
-            'width': '100%',
-            // horizontalScroll: true,
+            });
+            return tmp;
+        }
 
-            'editable': {
-                'add': true,
-                'remove': false,
-                'updateTime': true,
-                'updateGroup': true
-            },
-            itemsAlwaysDraggable: {
-                range: true
-            },
-            template: function (item, element, data) {
-                console.log(element);
-                return item.content;
-            },
+        function addToBerthSchedule(item) {
+            $.ajax({
 
-
-            snap: function (date, scale, step) {
-                var hour = 60 * 60;
-                return Math.round(date / hour) * hour;
-            },
-
-            min: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),                // lower limit of visible range to today - 1year
-            max: new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()),                // upper limit of visible range to today + 1year
-            zoomMin: 1000 * 60 * 60 * 12,             // one day in milliseconds
-            zoomMax: 1000 * 60 * 60 * 24 * 31 * 12     // about three months in milliseconds
-
-        };
-
-        var groups = [
-
-            {
-                id: 1,
-                content: 'JCT 1',
-                berthHeight: 300,
-                className: ""
-                //  style: "min-height:100px;max-height:100px"
-                // Optional: a field 'className', 'style', 'order', [properties]
-            },
-            {
-                id: 2,
-                content: 'JCT 2',
-                berthHeight: 332
-                // Optional: a field 'className', 'style', 'order', [properties]
-            },
-            {
-                id: 3,
-                content: 'JCT 3',
-                berthHeight: 300
-                // Optional: a field 'className', 'style', 'order', [properties]
-            },
-            {
-                id: 4,
-                content: 'JCT 4',
-                berthHeight: 300
-            },
-            {
-                id: 5,
-                content: 'CBS',
-                berthHeight: 170
-            },
-            // {
-            //   id: 6,
-            //   content: 'NFB',
-            //   berthHeight: 200
-            // },
-            {
-                id: 6,
-                content: 'UCT',
-                berthHeight: 295
-            }
-            // {
-            //   id: 8,
-            //   content: 'UCT2',
-            //   berthHeight: 200
-            // }
-            // more groups...
-        ];
-
-        // Create a Timeline
-        var timeline = new vis.Timeline(container, items, groups, options);
-        $('#btn_view_date').on('click', function () {
-            var date = new Date($("#view_date").val());
-            console.log(date);
-            timeline.setWindow(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
-        });
-
-
-        /**
-         * Move the timeline a given percentage to left or right
-         * @param {Number} percentage   For example 0.1 (left) or -0.1 (right)
-         */
-        function move(percentage) {
-            var range = timeline.getWindow();
-            var interval = range.end - range.start;
-
-            timeline.setWindow({
-                start: range.start.valueOf() - interval * percentage,
-                end: range.end.valueOf() - interval * percentage
+                'type': "POST",
+                'dataType': "text",
+                'data': item,
+                'url': '/api/berth-schedule',
+                'success': function (data) {
+                    alert(data);
+                }
             });
         }
 
-
-        // attach events to the navigation buttons
-        document.getElementById('zoomIn').onclick = function () {
-            timeline.zoomIn(0.2);
-        };
-        document.getElementById('zoomOut').onclick = function () {
-            timeline.zoomOut(0.2);
-        };
-        document.getElementById('moveLeft').onclick = function () {
-            move(0.2);
-        };
-        document.getElementById('moveRight').onclick = function () {
-            move(-0.2);
-        };
-
-
-        function handleDragStart(event) {
-            hidden_data = JSON.parse(event.target.querySelector('span').innerHTML.trim());
-            $("#vessel-details-list #va_" + hidden_data.id).fadeTo('fast', 0.5);
-            var dragSrcEl = event.target;
-
-            event.dataTransfer.effectAllowed = 'move';
-
-            var item = {
-                id: 'va_' + hidden_data.id,
-                type: 'range',
-                style: 'height:' + hidden_data.loa / 2 + 'px',
-                content: event.target.querySelector('div').innerHTML
-            };
-            // set event.target ID with item ID
-            event.target.id = 'va_' + hidden_data.id;
-
-            event.dataTransfer.setData("text", JSON.stringify(item));
-            // Trigger on from the new item dragged when this item drag is finish
-            event.target.addEventListener('dragend', handleDragEnd.bind(this), false);
-        }
-
-        function handleDragEnd(event) {
-            // Last item that just been dragged, its ID is the same of event.target
-            var newItem_dropped = timeline.itemsData.get(event.target.id);
-
-            if (newItem_dropped != undefined) {
-                $("#vessel-details-list #" + newItem_dropped.id).remove();
-            } else {
-                $("#vessel-details-list #" + item.id).fadeTo('fast', 1);
+        // Get CSRF token
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
 
-        var items = document.querySelectorAll('.vessel-detail');
-        console.log(items);
-        for (var i = items.length - 1; i >= 0; i--) {
-            var item = items[i];
-            item.addEventListener('dragstart', handleDragStart.bind(this), false);
-        }
+        $(document).ready(function () {
+
+            var today = new Date();
+            var csrftoken = getCookie('csrftoken');
+            console.log(csrftoken);
+
+            // DOM element where the Timeline will be attached
+            var container = document.getElementById('visualization');
+            var today = new Date();
+
+
+            var berths = getAjaxData('/api/berths').map((berth, index) => {
+                return {
+                    id: berth.id,
+                    value: berth.order,
+                    content: berth.name,
+                    max_length: berth.max_length,
+                    max_across: berth.max_across,
+                    max_draft: berth.max_draft
+                }
+            });
+
+            var items = new vis.DataSet([
+                {
+                    id: -1,
+                    group: 1,
+                    align: 'center',
+                    content: 'Ever Deluxe<br>\n' +
+                        '300Box/294.13M<br>\n' +
+                        'Jan. 30, 2019, noon (dfgdfg)\n',
+                    style: "text-align: center ;border-color: black;color: white; height: calc(294.13px /2)",
+                    start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+                    end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+                }
+            ]);
+
+            // Configuration for the Timeline
+            var options = {
+                showCurrentTime: true,
+                stack: false,
+                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+                verticalScroll: true,
+                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3, today.getHours()),
+                margin: {
+                    item: {
+                        vertical: 26, // Distance between two bollards
+                        horizontal: 0
+                    }
+                },
+                zoomable: false,  // false
+                'orientation': {
+                    'axis': 'top'
+                },
+                'width': '100%',
+                // horizontalScroll: true,
+
+                'editable': {
+                    'add': true,
+                    'remove': false,
+                    'updateTime': true,
+                    'updateGroup': true
+                },
+                itemsAlwaysDraggable: {
+                    range: true
+                },
+                template: function (item, element, data) {
+                    console.log(element);
+                    return item.content;
+                },
+
+
+                snap: function (date, scale, step) {
+                    var hour = 60 * 60;
+                    return Math.round(date / hour) * hour;
+                },
+                groupOrder: function (a, b) {
+
+                    return a.value - b.value;
+                },
+
+                min: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),                // lower limit of visible range to today - 1year
+                max: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),                // upper limit of visible range to today + 1year
+                zoomMin: 1000 * 60 * 60 * 12,             // one day in milliseconds
+                zoomMax: 1000 * 60 * 60 * 24 * 31 * 12     // about three months in milliseconds
+
+            };
+
+            var groups = [
+
+                {
+                    id: 1,
+                    value: 1,
+                    content: '1MN',
+                    berthHeight: 300,
+                    className: ""
+                    //  style: "min-height:100px;max-height:100px"
+                    // Optional: a field 'className', 'style', 'order', [properties]
+                },
+                {
+                    id: 2,
+                    value: 2,
+                    content: '1MS',
+                    berthHeight: 332
+                    // Optional: a field 'className', 'style', 'order', [properties]
+                },
+                {
+                    id: 3,
+                    value: 3,
+                    content: '2MN',
+                    berthHeight: 300
+                    // Optional: a field 'className', 'style', 'order', [properties]
+                },
+
+                // more groups...
+            ];
+
+            // Create a Timeline
+
+
+            var timeline = new vis.Timeline(container, items, berths, options);
+            $('#btn_view_date').on('click', function () {
+                var date = new Date($("#view_date").val());
+                console.log(date);
+                timeline.setWindow(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
+            });
+
+
+            /**
+             * Move the timeline a given percentage to left or right
+             * @param {Number} percentage   For example 0.1 (left) or -0.1 (right)
+             */
+            function move(percentage) {
+                var range = timeline.getWindow();
+                var interval = range.end - range.start;
+
+                timeline.setWindow({
+                    start: range.start.valueOf() - interval * percentage,
+                    end: range.end.valueOf() - interval * percentage
+                });
+            }
+
+
+            // attach events to the navigation buttons
+            document.getElementById('zoomIn').onclick = function () {
+                timeline.zoomIn(0.2);
+            };
+            document.getElementById('zoomOut').onclick = function () {
+                timeline.zoomOut(0.2);
+            };
+            document.getElementById('moveLeft').onclick = function () {
+                move(0.2);
+            };
+            document.getElementById('moveRight').onclick = function () {
+                move(-0.2);
+            };
+
+
+            function handleDragStart(event) {
+                hidden_data = JSON.parse(event.target.querySelector('span').innerHTML.trim());
+                $("#vessel-details-list #" + hidden_data.id).fadeTo('fast', 0.5);
+                var dragSrcEl = event.target;
+
+                event.dataTransfer.effectAllowed = 'move';
+
+                var item = {
+                    id: hidden_data.id,
+                    type: 'range',
+                    style: 'height:' + hidden_data.loa / 2 + 'px',
+                    content: event.target.querySelector('div').innerHTML
+                };
+                // set event.target ID with item ID
+                event.target.id =  hidden_data.id;
+
+                event.dataTransfer.setData("text", JSON.stringify(item));
+                // Trigger on from the new item dragged when this item drag is finish
+                event.target.addEventListener('dragend', handleDragEnd.bind(this), false);
+            }
+
+            function handleDragEnd(event) {
+                // Last item that just been dragged, its ID is the same of event.target
+                var newItem_dropped = timeline.itemsData.get(event.target.id);
+
+                if (newItem_dropped != undefined) {
+                    data = {}
+                    $("#vessel-details-list #" + newItem_dropped.id).remove();
+                    data.csrfmiddlewaretoken = csrftoken;
+                    data.id = newItem_dropped.id;
+                    data.group = newItem_dropped.group;
+                    data.start = newItem_dropped.start;
+                    data.end = newItem_dropped.end;
+
+                    addToBerthSchedule(data);
+                } else {
+                    $("#vessel-details-list #" + newItem_dropped.id).fadeTo('fast', 1);
+                }
+            }
+
+
+            var items = document.querySelectorAll('.vessel-detail');
+            console.log(items);
+            for (var i = items.length - 1; i >= 0; i--) {
+                var item = items[i];
+                item.addEventListener('dragstart', handleDragStart.bind(this), false);
+            }
+
+
+        });
 
 
     </script>
