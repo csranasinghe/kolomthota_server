@@ -4,13 +4,25 @@ from .models import  VesselProgress
 from .forms import VesselProgressForm
 from django.views.generic import UpdateView
 from django.http import HttpResponse
+from django.contrib import messages
+
+
 
 # Create your views here.
 def vessel_dashboard(request):
     if request.method == "POST":
         form_one = VesselProgressForm(request.POST)
-        if form_one.is_valid():
-            form_one.save()
+        vessel = VesselArrival.objects.get(id=int(form_one.data['vessel']))
+
+        try:
+            new_vessel = VesselProgress.objects.create(
+                vessel=vessel,
+                dis=int(request.POST.get('dis')),
+                load=int(request.POST.get('load'))
+            )
+        except:
+            messages.error(request, 'The vessel progress is already added')
+        
     else:
         form_one = VesselProgressForm()
     

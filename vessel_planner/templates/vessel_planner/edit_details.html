@@ -3,21 +3,41 @@
 
 {% block content_middle %}
 <h1 style=" text-align: center">Edit Progress</h1>
-{{progress.vessel}}
 
-<form method="POST" action="">
 
-    {% csrf_token %}
-    <li style="display: none">{{form.vessel.label_tag}} <input type="text" name="vessel" id="id_vessel" value="{{ progress.vessel.id }}"></input></li>
-    <li>{{form.dis.label_tag}}  <input type="number" name="dis" id="dis" placeholder="{{ progress.dis }}"></input></li>
-    <li>{{form.load.label_tag}} <input type="number" name="load" id="load" placeholder="{{ progress.load }}"></input></li>
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <br />
+        <h3 style=" text-align: center">Vessel Ref No {{progress.vessel}}</h1>
+            <br />
 
-    </ul>
+            <form method="POST" action="">
 
-    <br/>
-     <button type="submit" class="btn btn-info" value="Save">Submit</button>
-</form>
+                {% csrf_token %}
+                <ul>
+                    <li style="display: none">{{form.vessel.label_tag}} <input type="text" name="vessel" id="id_vessel"
+                            value="{{ progress.vessel.id }}"></input></li>
+                </ul>
+                <div class="form-group">
+                    <label for="dis">{{form.dis.label_tag}}:</label>
+                    <input type="number" name="dis" id="dis" placeholder="{{ progress.dis }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="load">{{form.load.label_tag}}:</label>
+                    <input type="number" name="load" id="load" placeholder="{{ progress.load }}" class=" form-control">
+                </div>
 
-           
+
+
+                <br />
+                <button type="submit" class="btn btn-info" value="Save">Submit</button>
+            </form>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+
+
 
 {% endblock content_middle %}

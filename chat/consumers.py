@@ -10,7 +10,7 @@ from .models import Message
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        messages = Message.last_10_messages()
+        messages = Message.last_20_messages()
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -30,8 +30,9 @@ class ChatConsumer(WebsocketConsumer):
         return self.send_chat_message(content)
 
     def messages_to_json(self, messages):
+        message_rev = messages[::-1]
         result = []
-        for message in messages:
+        for message in message_rev:
             result.append(self.message_to_json(message))
         return result
 
