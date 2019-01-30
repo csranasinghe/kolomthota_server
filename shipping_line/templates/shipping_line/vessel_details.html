@@ -49,6 +49,10 @@
     <div class="alert alert-danger">
       <li class="{{ message.tags }}">{{ message }}</li>
     </div>
+    {%elif "failed-vessel" in message.tags%}
+    <div class="alert alert-danger">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
     {%endif%}
     {% endfor %}
   {% endif %}
@@ -57,21 +61,44 @@
 </div>
 <div class="row">
   <div class="col-sm-2">
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+        <button type="button" class="btn btn-info" disabled>Add new vessel arrival</button>
+      </span>
+      {% else %}
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1">
       Add new vessel arrival
     </button>
+    {% endif %}
   </div>
   <div class="col-sm-3">
 
     <div class="btn-group ">
       <button type="button" class="btn btn-info" disabled>Vessel Details</button>
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+      <button type="button" class="btn btn-info" disabled>
+          <i class="fa fa-plus"> Add</i>
+      </button>
+      </span>
+      {% else %}
       <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal2">
 
         <i class="fa fa-plus"> Add</i>
       </button>
+      {% endif %}
+
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+      <button type="button" class="btn btn-info" disabled>
+        <i class="fa fa-pencil"> View</i>
+      </button>
+      </span>
+      {% else %}
       <button type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';">
         <i class="fa fa-pencil"> View</i>
       </button>
+      {% endif %}
     </div>
   </div>
   <div class="col-sm-2"></div>
@@ -87,11 +114,13 @@
     <input class="form-control" id="myInput" type="text" placeholder="Search..">
   </div>
   <div class="col-sm-1">
+    {% if request.user.sa_account.is_active_agent == True %}
     <button type="button" class="btn btn-danger" onclick="location.href='/shipping-line/notification/';">
       <i class="fa fa-bell">
         <span class="batch">{{count}}</span>
       </i>
     </button>
+    {%endif%}
   </div>
 </div>
 
@@ -134,16 +163,54 @@
       <td>{{obj.next_port}}</td>
       <td>{{obj.vessel}}</td>
       <td>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True%}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+          <button type="button" class="btn btn-outline-success" disabled>Progress</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+          <button type="button" class="btn btn-outline-success" disabled>Progress</button>
+          </span>
+          {% else %}
         <button type="button" class="btn btn-outline-success" onclick="location.href='/shipping-line/vessel-progress/{{obj.id}}';">Progress</button>
+          {%endif%}
       </td>
 
       <td>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+            <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+            <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+          </span>
+          {% elif obj.third_confirm == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are no longer allow to edit">
+              <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+            </span>
+          {% else %}
         <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
           value="Edit" />
+          {% endif %}
       </td>
 
       <td>
-        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True  %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+            <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+            <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+          </span>
+          {% elif obj.third_confirm == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are no longer allow to delete">
+              <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+            </span>
+          {% else %}
+        <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items/{{obj.id}}';">Delete</button>
+            {% endif %}
       </td>
     </tr>
 
@@ -160,7 +227,7 @@
           <!-- Modal body -->
           <div class="modal-body">
             <h4>Are you sure ?</h4>
-            <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items/{{obj.id}}';">Yes</button>
+            <button type="button" class="btn btn-outline-danger" >Yes</button>
             <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
           </div>
 
