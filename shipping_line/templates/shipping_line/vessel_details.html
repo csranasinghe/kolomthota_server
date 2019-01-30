@@ -148,8 +148,19 @@
     </tr>
   </thead>
   <tbody id="myTable">
-    <tr>
+    
       {% for obj in object_list %}
+      {% if obj.is_rejected_user == True or obj.is_rejected_BP == True %}
+      <tr class="table-danger" >
+      {% elif obj.first_confirm == False %}
+      <tr class="table-warning">
+      {% elif obj.second_confirm == False %} 
+      <tr class="table-info">
+      {% elif obj.third_confirm == False %} 
+      <tr class="table-success">
+      {% else %} 
+      <tr class="table-active">
+      {% endif %}
       <td>{{obj.shipping_agent}}</td>
       <td>{{obj.eta}}</td>
       <td>{{obj.dis}}</td>
