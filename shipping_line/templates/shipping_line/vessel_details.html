@@ -279,7 +279,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title"> Search </h4>
+        <h4 class="modal-title"> History </h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
@@ -287,9 +287,15 @@
       <div class="modal-body">
         <form action="history/" method="GET">
           {% csrf_token %}
-          <input type="datetime-local" name="from_date" id="from_date" required>
-          <input type="datetime-local" name="to_date" id="to_date" required>
-          <input type="submit">
+          <div class="form-group">
+            <label for="from_date">To:</label>
+            <input type="datetime-local" class="form-control" id="from_date"  name="from_date">
+          </div>
+          <div class="form-group">
+            <label for="to_date">From:</label>
+            <input type="datetime-local" class="form-control" id="to_date" name="to_date">
+          </div>
+          <button type="submit" class="btn btn-info" value="Save">Submit</button>
         </form>
 
 
