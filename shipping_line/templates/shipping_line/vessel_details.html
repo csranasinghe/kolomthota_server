@@ -33,9 +33,28 @@
 
 
 
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    {% if messages %}
 
-<br />
-<br />
+
+
+    {% for message in messages %}
+    {%if "success" in message.tags %}
+    <div class="alert alert-success">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
+    {%elif "failed" in message.tags%}
+    <div class="alert alert-danger">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
+    {%endif%}
+    {% endfor %}
+  {% endif %}
+</div>
+<div class="col-sm-2"></div>
+</div>
 <div class="row">
   <div class="col-sm-2">
     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1">
@@ -188,7 +207,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Add new vessel </h4>
+        <h4 class="modal-title">Add New Vessel </h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
@@ -196,26 +215,35 @@
       <div class="modal-body">
         <form method="POST" action="">
           {% csrf_token %}
+          <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="form_type" id="form_type"
+              value="1"></input></li>
 
+          <div class="form-group">
+            <label for="vessel_name">Vessel Name:</label>
+            <input type="text" class="form-control" id="vessel_name" name="vessel_name" required>
+          </div>
+          <div class="form-group">
+            <label for="vessel_name">Vessel loa:</label>
+            <input type="number" class="form-control" id="vessel_loa" name="vessel_loa" required>
+          </div>
+          <h6>Type :</h6>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="vessel_status" value="M" required>Main Line
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="vessel_status" value="F" required>Feeder Line
+            </label>
+          </div>
 
-
-          <ul>
-            <li>{{form_one.vessel_name.label_tag}} {{form_one.vessel_name}}</li>
-            <li>{{form_one.vessel_status.label_tag}} {{form_one.vessel_status}}</li>
-            <li>{{form_one.vessel_loa.label_tag}} {{form_one.vessel_loa}}</li>
-            <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author" value="{{ request.user.id }}"></input></li>
-          </ul>
+          <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author" value="{{ request.user.id }}"></input></li>
 
           <br />
           <button type="submit" class="btn btn-info" value="Save">Submit</button>
         </form>
 
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
 
       </div>
     </div>
@@ -240,33 +268,57 @@
 
           {% csrf_token %}
 
+          <li style="display: none"> <input type="text" name="form_type" id="form_type" value="2"></input></li>
 
-          <li style="display: none">{{form.shipping_agent.label_tag}} <input type="text" name="shipping_agent" id="id_shipping_agent"
+
+          <li style="display: none">{{form.shipping_agent.label_tag}} <input type="text" name="shipping_agent" id="shipping_agent"
               value="{{ request.user.id }}"></input></li>
+          
           <li>{{form.vessel.label_tag}} {{form.vessel}}</li>
-          <li>{{form.eta.label_tag}} <input type="text" name='eta' placeholder="2018-09-06 16:02:50"></li>
-          <li>{{form.dis.label_tag}} {{form.dis}}</li>
-          <li>{{form.load.label_tag}} {{form.load}}</li>
-          <li>{{form.ref_no.label_tag}} {{form.ref_no}}</li>
-          <li>{{form.draft_arrival.label_tag}} {{form.draft_arrival}}</li>
-          <li>{{form.draft_departure.label_tag}} {{form.draft_departure}}</li>
-          <li>{{form.remarks.label_tag}} {{form.remarks}}</li>
-          <li>{{form.service.label_tag}} {{form.service}}</li>
-          <li>{{form.last_port.label_tag}} {{form.last_port}}</li>
-          <li>{{form.next_port.label_tag}} {{form.next_port}}</li>
-
-          </ul>
+          <div class="form-group">
+            <label for="from_date">Date :</label>
+            <input type="datetime-local" class="form-control" id="eta"  name='eta' placeholder="2018-09-06 16:02:50">
+          </div>
+          <div class="form-group">
+            <label for="dis">Vessel dis:</label>
+            <input type="number" class="form-control" id="dis" name="dis" required>
+          </div>
+          <div class="form-group">
+            <label for="load">Vessel load:</label>
+            <input type="number" class="form-control" id="load" name="load" required>
+          </div>
+          <div class="form-group">
+            <label for="ref_no">Ref No:</label>
+            <input type="text" class="form-control" id="ref_no" name="ref_no" required>
+          </div>
+          <div class="form-group">
+            <label for="draft_arrival">Draft Arival:</label>
+            <input type="number" step="0.1" class="form-control" id="draft_arrival" name="draft_arrival" required>
+          </div>
+          <div class="form-group">
+            <label for="draft_departure">Draft Departure:</label>
+            <input type="number" step="0.1" class="form-control" id="draft_departure" name="draft_departure" required>
+          </div>
+          <div class="form-group">
+            <label for="remarks">Remarks :</label>
+            <input type="comment" class="form-control" id="remarks" name="remarks" required>
+          </div>
+          <div class="form-group">
+            <label for="service">Service :</label>
+            <input type="text" class="form-control" id="service" name="service" required>
+          </div>
+          <div class="form-group">
+            <label for="last_port">Last Port:</label>
+            <input type="text" class="form-control" id="last_port" name="last_port" required>
+          </div>
+          <div class="form-group">
+            <label for="next_port">Next Port:</label>
+            <input type="text" class="form-control" id="next_port" name="next_port" required>
+          </div>
 
           <br />
           <button type="submit" class="btn btn-info" value="Save">Submit</button>
         </form>
-
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
 
       </div>
     </div>
@@ -289,7 +341,7 @@
           {% csrf_token %}
           <div class="form-group">
             <label for="from_date">To:</label>
-            <input type="datetime-local" class="form-control" id="from_date"  name="from_date">
+            <input type="datetime-local" class="form-control" id="from_date" name="from_date">
           </div>
           <div class="form-group">
             <label for="to_date">From:</label>

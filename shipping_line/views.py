@@ -2,9 +2,11 @@ from django.shortcuts import render,redirect
 from .forms import VesselArrivalDetailsForm,VesselDetailsForm
 from .models import ShippingLine,VesselArrival,Vessel
 from vessel_planner.models import VesselProgress
+from accounts.models import ShippingAgent
 from datetime import datetime
 from datetime import timedelta
 from django.http import HttpResponse
+from django.contrib import messages
 
 def get_list_to_be_notified(queryset):
     time = datetime.now()
@@ -76,10 +78,58 @@ def vessel_listview(request):
     if request.method == "POST":
         form = VesselArrivalDetailsForm(request.POST)
         form_one = VesselDetailsForm(request.POST)
-        if form.is_valid():
-            form.save()
-        elif form_one.is_valid():
-            form_one.save()
+        form_type = int(request.POST.get('form_type'))
+        if form_type == 1:
+            try :
+                new_vessel = Vessel.objects.create(
+                    vessel_name = request.POST.get('vessel_name'),
+                    vessel_loa = int(request.POST.get('vessel_loa')),
+                    vessel_status = (request.POST.get('vessel_status'))[0:1],
+                    author = ShippingAgent.objects.get(account_id=int(form_one.data['author']))
+                )
+                messages.success(request, 'The vessel is added' ,extra_tags='success')
+            except:
+                messages.error(request, 'The vessel is already added', extra_tags='failed')
+        elif form_type == 2:
+            shipping_agent_new = ShippingAgent.objects.get(account_id=int(request.POST.get('shipping_agent')))
+            vessel_new = Vessel.objects.get(id=int(form_one.data['vessel']))
+            data = request.POST.get('eta')
+            eta_new= datetime(
+                day = int(data[8:10]),
+                month = int(data[5:7]),
+                year = int(data[0:4]),
+                hour = int(data[11:13]),
+                minute = int(data[14:16])
+            )
+            dis_new = int(request.POST.get('dis'))
+            load_new = int(request.POST.get('load'))
+            ref_no_new = request.POST.get('ref_no')
+            draft_arrival_new = float(request.POST.get('draft_arrival'))
+            draft_departure_new = float(request.POST.get('draft_departure'))
+            remarks_new = request.POST.get('remarks')
+            service_new = request.POST.get('service')
+            last_port_new = request.POST.get('last_port')
+            next_port_new = request.POST.get('next_port')
+            try:
+                new_vessal_arival = VesselArrival.objects.create(
+                    shipping_agent = shipping_agent_new ,
+                    eta = eta_new ,
+                    dis = dis_new ,
+                    load = load_new ,
+                    ref_no = ref_no_new ,
+                    draft_arrival = draft_arrival_new ,
+                    draft_departure = draft_departure_new ,
+                    remarks = remarks_new ,
+                    service = service_new ,
+                    last_port = last_port_new ,
+                    next_port = next_port_new ,
+                    vessel = vessel_new
+                )
+            except:
+                messages.error(request, 'The vessel Arrival is already added', extra_tags='failed-vessel')
+            return redirect('/')
+        else:
+            return redirect('/')
     else:
         form = VesselArrivalDetailsForm()
         form_one = VesselDetailsForm()
@@ -274,6 +324,8 @@ def edit_vessel_done(request,item_id=None):
         if(vessel_loa_new != ""):
             vessel.vessel_loa = float(vessel_loa_new)
         if(vessel_status_new != ""):
+            if(vessel_status_new[0:1] != 'F' or vessel_status_new[0:1] != 'M' ):
+                vessel_status_new = 'M'
             vessel.vessel_status = vessel_status_new[0:1]
         vessel.save()
     
