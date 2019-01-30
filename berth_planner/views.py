@@ -3,11 +3,10 @@ from django.shortcuts import render, get_object_or_404 ,redirect
 from shipping_line.models import VesselArrival
 
 
-
 def index(request):
     queryset = VesselArrival.objects.filter(is_reviewed=True).order_by('-eta')
     context = {
-        "vessel_arrivals":queryset,
+        "vessel_arrivals": queryset,
     }
     return render(request, 'berth_planner/dashboard.html', context)
 
@@ -15,9 +14,11 @@ def index(request):
 def schedule_published(request):
     return render(request, 'berth_planner/schedule_published.html', {})
 
+
 def vessel_arrivals(request):
     vessels = VesselArrival.objects.all().order_by('-eta')
     return render(request, 'berth_planner/vessel_arrivals.html', {"vessels": vessels})
+
 
 def vessel_arrivals_review(request, id, review_status):
     sub = get_object_or_404(VesselArrival, id=id)
