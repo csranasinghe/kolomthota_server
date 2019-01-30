@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block extra_refresh %} 
+{% block extra_refresh %}
 <meta http-equiv="refresh" content="300">
 {% endblock extra_refresh %}
 
@@ -10,49 +10,84 @@
 {% block extra_head %}
 {{block.super}}
 <link rel="stylesheet" href="{% static " shipping_line/css/notification.css" %}">
+
 {% endblock extra_head %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+{% endblock extra_js %}
 
 
 {% block content_middle %}
 <h1 style=" text-align: center" class="py-5">{{ request.user.sa_account.shipping_line }} vessel submissions </h1>
 
 
-<a class="btn btn-info my-3" role="button" data-toggle="modal" data-target="#myModal1">
-  Add new vessel arrival
-</a>
 
-<div class="btn-group btn-group-lg">
-  <button type="button" class="btn btn-info" disabled>Vessel</button>
-  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal2">
 
-    <i class="fa fa-plus"></i>
-  </button>
-  <button type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';">
-    <i class="fa fa-pencil"></i>
-  </button>
+<br />
+<br />
+<div class="row">
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1">
+      Add new vessel arrival
+    </button>
+  </div>
+  <div class="col-sm-3">
+
+    <div class="btn-group ">
+      <button type="button" class="btn btn-info" disabled>Vessel Details</button>
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal2">
+
+        <i class="fa fa-plus"> Add</i>
+      </button>
+      <button type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';">
+        <i class="fa fa-pencil"> View</i>
+      </button>
+    </div>
+  </div>
+  <div class="col-sm-2"></div>
+  <div class="col-sm-1">
+
+    <button type="button" class="btn  btn-info" data-toggle="modal" data-target="#myModal3">
+      <i class="fa fa-search "> History</i>
+    </button>
+
+  </div>
+
+  <div class="col-sm-3">
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  </div>
+  <div class="col-sm-1">
+    <button type="button" class="btn btn-danger" onclick="location.href='/shipping-line/notification/';">
+      <i class="fa fa-bell">
+        <span class="batch">{{count}}</span>
+      </i>
+    </button>
+  </div>
 </div>
 
-<button type="button" class="btn btn-lg btn-info" onclick="location.href='/shipping-line/notification/';">
-  <i class="fa fa-bell">
-    <span class="batch">{{count}}</span>
-  </i>
-</button></td>
-<button type="button" class="btn btn-lg btn-info" data-toggle="modal" data-target="#myModal3">
-  <i class="fa fa-search " ></i>
-</button></td>
 
-
-
-<table class="table table-hover">
+<br />
+<table class="table table-hover table-bordered text-center">
   <thead>
-    <tr>
+    <tr class="table-active">
       <th>Shipping Line Agent</th>
       <th>ETA</th>
       <th>dis</th>
       <th>load</th>
       <th>ref_no</th>
-      <th>draft_arrival</th>
-      <th>draft_diparture</th>
+      <th>draft<br />arrival</th>
+      <th>draft<br />diparture</th>
       <th>remarks</th>
       <th>service</th>
       <th>lastport</th>
@@ -64,32 +99,33 @@
 
     </tr>
   </thead>
-  <tbody>
-    {% for obj in object_list %} 
-    <td>{{obj.shipping_agent}}</td>
-    <td>{{obj.eta}}</td>
-    <td>{{obj.dis}}</td>
-    <td>{{obj.load}}</td>
-    <td>{{obj.ref_no}}</td>
-    <td>{{obj.draft_arrival}}</td>
-    <td>{{obj.draft_departure}}</td>
-    <td>{{obj.remarks}}</td>
-    <td>{{obj.service}}</td>
-    <td>{{obj.last_port}}</td>
-    <td>{{obj.next_port}}</td>
-    <td>{{obj.vessel}}</td>
-    <td>
-      <button type="button" class="btn btn-outline-success" onclick="location.href='/shipping-line/vessel-progress/{{obj.id}}';">{{obj.id}}</button>
-    </td>
-    
-    <td>
-      <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
-        value="Edit" />
-    </td>
+  <tbody id="myTable">
+    <tr>
+      {% for obj in object_list %}
+      <td>{{obj.shipping_agent}}</td>
+      <td>{{obj.eta}}</td>
+      <td>{{obj.dis}}</td>
+      <td>{{obj.load}}</td>
+      <td>{{obj.ref_no}}</td>
+      <td>{{obj.draft_arrival}}</td>
+      <td>{{obj.draft_departure}}</td>
+      <td>{{obj.remarks}}</td>
+      <td>{{obj.service}}</td>
+      <td>{{obj.last_port}}</td>
+      <td>{{obj.next_port}}</td>
+      <td>{{obj.vessel}}</td>
+      <td>
+        <button type="button" class="btn btn-outline-success" onclick="location.href='/shipping-line/vessel-progress/{{obj.id}}';">Progress</button>
+      </td>
 
-    <td>
-      <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
-    </td>
+      <td>
+        <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
+          value="Edit" />
+      </td>
+
+      <td>
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModal4">Delete</button>
+      </td>
     </tr>
 
     <div class="modal fade" id="myModal4">
@@ -127,7 +163,7 @@
 
           <!-- Modal body -->
           <div class="modal-body">
-              <h4>{{obj.ref_no}}</h4>
+            <h4>{{obj.ref_no}}</h4>
           </div>
 
           <!-- Modal footer -->
@@ -167,8 +203,7 @@
             <li>{{form_one.vessel_name.label_tag}} {{form_one.vessel_name}}</li>
             <li>{{form_one.vessel_status.label_tag}} {{form_one.vessel_status}}</li>
             <li>{{form_one.vessel_loa.label_tag}} {{form_one.vessel_loa}}</li>
-            <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author"
-              value="{{ request.user.id }}"></input></li>
+            <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author" value="{{ request.user.id }}"></input></li>
           </ul>
 
           <br />

@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'vessel_planner',
     'widget_tweaks',
     'chat',
-    'channels'
+    'channels',
+    'mathfilters'
 ]
 
 MIDDLEWARE = [

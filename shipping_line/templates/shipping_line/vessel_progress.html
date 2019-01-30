@@ -1,15 +1,69 @@
 {% extends 'shipping_line/index.html' %}
-
+{% load mathfilters %}
 
 {% block content_middle %}
+<br />
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
 
-<div>
-{%for item in item%}
-{{item.vessel}}
-{{item.load}}
-{{item.dis}}
-{% endfor %}
-<input type="button" class="btn btn-info" onclick="location.href='/';" value="Go Back" />
+
+        {%for item in item%}
+        <h3 style="text-align:center">Vessel {{item.vessel}}</h3>
+        <br />
+        <div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h5 style="text-align:left">Load :</h5>
+                </div>
+                <div class="col-sm-4">
+                        
+                </div>
+
+                <div class="col-sm-5" style="text-align:center">
+                    <b>
+                        Completed :
+                    </b>
+                    {{item.load}} as {{100|mul:item.load|div:item2.load}}%
+                </div>
+            </div>
+            <div class="progress">
+
+                <div class="progress-bar progress-bar-striped" style="width:{{100|mul:item.load|div:item2.load}}%"></div>
+            </div>
+            <br />
+        </div>
+        <div>
+                <div class="row">
+                        <div class="col-sm-3">
+                            <h5 style="text-align:left">Dis :</h5>
+                        </div>
+                        <div class="col-sm-4">
+                        </div>
+        
+                        <div class="col-sm-5" style="text-align:center">
+                            <b>
+                                Completed :
+                            </b>
+                            {{item.dis}} as {{100|mul:item.dis|div:item2.dis}}%
+                        </div>
+                    </div>
+                <div class="progress">
+
+                    <div class="progress-bar progress-bar-striped" style="width:{{100|mul:item.dis|div:item2.dis}}%"></div>
+                </div>
+                <br />
+        </div>
+
+
+        
+        {% endfor %}
+        <input type="button" class="btn btn-info" onclick="location.href='/';" value="Go Back" />
+    </div>
 </div>
+<div class="col-sm-3"></div>
+</div>
+<div>
 
-{% endblock content_middle %}
+
+    {% endblock content_middle %}

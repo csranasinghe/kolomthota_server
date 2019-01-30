@@ -55,6 +55,8 @@ class VesselArrival(models.Model):
     created_time = models.DateTimeField(auto_now=True)
 
     is_reviewed = models.BooleanField(default=False)
+    is_rejected_user = models.BooleanField(default=False)
+    is_rejected_BP = models.BooleanField(default=False)
     
     first_confirm = models.BooleanField(default=False)
     second_confirm = models.BooleanField(default=False)

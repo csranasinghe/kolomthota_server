@@ -72,7 +72,6 @@ def notification_confirm(request,item_id=None):
     item.save()
     return redirect('/shipping-line/notification/')
 
-
 def vessel_listview(request):
     if request.method == "POST":
         form = VesselArrivalDetailsForm(request.POST)
@@ -124,9 +123,11 @@ def connot_remove_vessel(request):
 
 def vessel_progress(request,item_id=None):
      item = VesselProgress.objects.filter(vessel=item_id)
+     item2 = VesselArrival.objects.get(id=item_id)
      template_name = 'shipping_line/vessel_progress.html'
      context = {
-         'item': item
+         'item': item,
+         'item2':item2
      }
      if not item :
         return redirect('/shipping-line/vessel-no-progress/')
@@ -177,7 +178,6 @@ def berth_schedule(request):
 
     }
     return render(request, template_name ,context)
-
 
 def view_history(request):
     if request.method=="GET":
