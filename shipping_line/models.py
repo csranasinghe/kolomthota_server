@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 
 class ShippingLine(models.Model):
@@ -63,6 +64,8 @@ class VesselArrival(models.Model):
     third_confirm = models.BooleanField(default=False)
 
     vessel = models.ForeignKey('Vessel', on_delete=models.DO_NOTHING, related_name="vessel")
+
+    schedule_details = JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Vessel Details'
