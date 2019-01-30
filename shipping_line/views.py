@@ -91,8 +91,43 @@ def vessel_listview(request):
             except:
                 messages.error(request, 'The vessel is already added', extra_tags='failed')
         elif form_type == 2:
-            
-            return HttpResponse("arrival")
+            shipping_agent_new = ShippingAgent.objects.get(account_id=int(request.POST.get('shipping_agent')))
+            vessel_new = Vessel.objects.get(id=int(form_one.data['vessel']))
+            data = request.POST.get('eta')
+            eta_new= datetime(
+                day = int(data[8:10]),
+                month = int(data[5:7]),
+                year = int(data[0:4]),
+                hour = int(data[11:13]),
+                minute = int(data[14:16])
+            )
+            dis_new = int(request.POST.get('dis'))
+            load_new = int(request.POST.get('load'))
+            ref_no_new = request.POST.get('ref_no')
+            draft_arrival_new = float(request.POST.get('draft_arrival'))
+            draft_departure_new = float(request.POST.get('draft_departure'))
+            remarks_new = request.POST.get('remarks')
+            service_new = request.POST.get('service')
+            last_port_new = request.POST.get('last_port')
+            next_port_new = request.POST.get('next_port')
+            try:
+                new_vessal_arival = VesselArrival.objects.create(
+                    shipping_agent = shipping_agent_new ,
+                    eta = eta_new ,
+                    dis = dis_new ,
+                    load = load_new ,
+                    ref_no = ref_no_new ,
+                    draft_arrival = draft_arrival_new ,
+                    draft_departure = draft_departure_new ,
+                    remarks = remarks_new ,
+                    service = service_new ,
+                    last_port = last_port_new ,
+                    next_port = next_port_new ,
+                    vessel = vessel_new
+                )
+            except:
+                messages.error(request, 'The vessel Arrival is already added', extra_tags='failed-vessel')
+            return redirect('/')
         else:
             return redirect('/')
     else:
