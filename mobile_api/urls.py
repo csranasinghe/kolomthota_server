@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^auth/token/refresh$', refresh_jwt_token),
     url(r'^logout$', Logout.as_view()),
     url(r'^users/sa$', ShippingAgentAPIView.as_view()),
+    url(r'^users/sa/me$', ShippingAgentDetails.as_view()),
     url(r'^users/sa/(?P<username_hash>[\w.@+-]+)$', CheckUsernameAPIView.as_view()),
     url(r'^shipping-lines$', ShippingLinesListAPIView.as_view()),
     url(r'^published-schedule$', PublishedScheduleAPIView.as_view()),

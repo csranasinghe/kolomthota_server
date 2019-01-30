@@ -83,15 +83,16 @@
         .vis-item {
 
             width: 100%;
-            text-align: center;
             border-color: black;
             background-color: darkblue;
             font-size: 15pt;
             color: white;
             background-color: darkblue;
-            font-size: 15pt;
-        }
 
+        }
+        .vis-item .vis-item-content{
+                text-align: center;
+        }
         /* End timeline custom styling kolomthota */
 
 
@@ -236,7 +237,7 @@
 
             var today = new Date();
             var csrftoken = getCookie('csrftoken');
-            console.log(csrftoken);
+
 
             // DOM element where the Timeline will be attached
             var container = document.getElementById('visualization');
@@ -254,19 +255,22 @@
                 }
             });
 
-            var items = new vis.DataSet([
-                {
-                    id: -1,
-                    group: 1,
+            var scheduled_arrivals =  getAjaxData('/api/berth-schedule');
+            var items = []
+            for (var i=0; i < scheduled_arrivals.length; i++){
+                items.push({
+                    id: scheduled_arrivals[i].id,
+                    group: scheduled_arrivals[i].schedule_details.group,
                     align: 'center',
-                    content: 'Ever Deluxe<br>\n' +
-                        '300Box/294.13M<br>\n' +
+                    content: scheduled_arrivals[i].vessel_name+'<br>\n' +
+                        scheduled_arrivals[i].total+'Box/' + scheduled_arrivals[i].vessel_loa+'M<br>\n' +
                         'Jan. 30, 2019, noon (dfgdfg)\n',
-                    style: "text-align: center ;border-color: black;color: white; height: calc(294.13px /2)",
-                    start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-                    end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-                }
-            ]);
+                    style: "border-color: black;color: white; font-size: 9pt; height: calc("+scheduled_arrivals[i].vessel_loa+"px /2)",
+                    start: new Date(scheduled_arrivals[i].schedule_details.start),
+                    end: new Date(scheduled_arrivals[i].schedule_details.end)
+                });
+            }
+
 
             // Configuration for the Timeline
             var options = {
@@ -298,7 +302,6 @@
                     range: true
                 },
                 template: function (item, element, data) {
-                    console.log(element);
                     return item.content;
                 },
 
@@ -310,6 +313,9 @@
                 groupOrder: function (a, b) {
 
                     return a.value - b.value;
+                },
+                onDropObjectOnItem: function (objectData, item, callback){
+                        console.log(objectData);
                 },
 
                 min: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),                // lower limit of visible range to today - 1year
@@ -354,7 +360,6 @@
             var timeline = new vis.Timeline(container, items, berths, options);
             $('#btn_view_date').on('click', function () {
                 var date = new Date($("#view_date").val());
-                console.log(date);
                 timeline.setWindow(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
             });
 
@@ -431,7 +436,6 @@
 
 
             var items = document.querySelectorAll('.vessel-detail');
-            console.log(items);
             for (var i = items.length - 1; i >= 0; i--) {
                 var item = items[i];
                 item.addEventListener('dragstart', handleDragStart.bind(this), false);

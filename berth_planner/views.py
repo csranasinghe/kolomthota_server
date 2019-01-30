@@ -4,7 +4,7 @@ from shipping_line.models import VesselArrival
 
 
 def index(request):
-    queryset = VesselArrival.objects.filter(is_reviewed=True).order_by('-eta')
+    queryset = VesselArrival.objects.filter(is_scheduled=False, is_rejected_user=False, is_reviewed=True).order_by('-eta')
     context = {
         "vessel_arrivals": queryset,
     }

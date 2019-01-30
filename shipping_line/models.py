@@ -63,6 +63,8 @@ class VesselArrival(models.Model):
     second_confirm = models.BooleanField(default=False)
     third_confirm = models.BooleanField(default=False)
 
+    is_scheduled = models.BooleanField(default=False)
+
     vessel = models.ForeignKey('Vessel', on_delete=models.DO_NOTHING, related_name="vessel")
 
     schedule_details = JSONField(null=True, blank=True)

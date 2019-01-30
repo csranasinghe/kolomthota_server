@@ -60,6 +60,23 @@ class ShippingAgentAPIView(APIView):
         return Response({"msg": "Shipping line agent account created successfully."}, status=status.HTTP_201_CREATED)
 
 
+class ShippingAgentDetails(APIView):
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        a = request.user
+        sh_agent = get_object_or_404(ShippingAgent, account__id=a.id)
+        return Response({
+            'id': a.id,
+            'email': a.email,
+            'first_name': a.first_name,
+            'last_name': a.last_name,
+            'shipping_line': sh_agent.shipping_line.id,
+            'shipping_line_name': sh_agent.shipping_line.name,
+        })
+
+
 class ShippingLinesListAPIView(ListAPIView):
     """
     API view to retrieve the list of registered shipping lines.
@@ -157,9 +174,21 @@ class BerthScheduleAPIView(APIView):
 
     def post(self, request):
         vessel_arrival = get_object_or_404(VesselArrival, id=request.data.get('id', -1))
+        vessel_arrival.is_scheduled = True
         vessel_arrival.schedule_details = {'group': request.data.get('group'),
                                            'start': request.data.get('start'),
                                            'end': request.data.get('end')}
         vessel_arrival.save()
         return Response({'msg': 'Added to the schedule.'})
 
+    def get(self, request):
+        # Vessel arrivals which are added to the schedule and not removed by user
+        vessel_arrivals = VesselArrival.objects.filter(is_rejected_user=False, is_scheduled=True)
+        resp = []
+        for va in vessel_arrivals:
+            resp.append({'schedule_details': va.schedule_details, 'vessel_name': va.vessel.vessel_name,
+                         'total': va.total, 'vessel_loa': va.vessel.vessel_loa, 'eta': va.eta, 'service': va.service,
+                         'remarks': va.remarks, 'id': va.id
+                         })
+
+        return Response(resp)
