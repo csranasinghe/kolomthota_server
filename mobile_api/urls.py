@@ -24,6 +24,7 @@ urlpatterns = [
     # Web API endpoints
     url(r'^berths$', BerthsList.as_view()),
     url(r'^berth-schedule$', BerthScheduleAPIView.as_view()),
+    url(r'^berth-schedule/(?P<va_id>\d+)$', BerthScheduleDeleteEditAPIView.as_view()),
 
 
 ]

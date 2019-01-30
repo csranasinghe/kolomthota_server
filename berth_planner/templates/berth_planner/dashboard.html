@@ -85,13 +85,17 @@
             width: 100%;
             border-color: black;
             background-color: darkblue;
-            font-size: 15pt;
+            font-size: 9pt;
             color: white;
-            background-color: darkblue;
+            background-color: #3f51b5;
 
         }
         .vis-item .vis-item-content{
                 text-align: center;
+        }
+
+        .vis-selected{
+            background-color: darkblue !important;
         }
         /* End timeline custom styling kolomthota */
 
@@ -113,9 +117,9 @@
                                     <div class="vessel-div" style="width: 100%; text-align: center ;border-color: black;
                                             height: calc({{ varrival.vessel.vessel_loa }}px /2);
                                             background-color: darkblue;
-                                            font-size: 15pt;
+                                            font-size: 9pt;
                                             color: white;">
-                                        {{ varrival.vessel.vessel_name }}<br/>
+                                        <strong>{{ varrival.vessel.vessel_name }}</strong><br/>
                                         {{ varrival.total }}Box/{{ varrival.vessel.vessel_loa }}M<br/>
                                         {{ varrival.eta }} ({{ varrival.service }})
                                         <span class="hidden-details">{"id": {{ varrival.id }}, "loa": {{ varrival.vessel.vessel_loa }} }</span>
@@ -129,8 +133,15 @@
                 </div>
 
                 <div role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                        <h1 class="h2">Schedule</h1>
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom" style="height:100px">
+
+                    <h2>Schedule</h2>
+                        <div id="message" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>Well done!</strong> You successfully read this important alert message.
+                        </div>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <button class="btn btn-sm btn-outline-secondary mr-2">Publish</button>
                         </div>
@@ -216,6 +227,18 @@
             });
         }
 
+        function deleteFromBerthSchedule(item, callback) {
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'url': '/api/berth-schedule/'+item.id,
+                'success': function (data) {
+
+                    alert(data);
+                }
+            });
+        }
+
         // Get CSRF token
         function getCookie(name) {
             var cookieValue = null;
@@ -262,7 +285,7 @@
                     id: scheduled_arrivals[i].id,
                     group: scheduled_arrivals[i].schedule_details.group,
                     align: 'center',
-                    content: scheduled_arrivals[i].vessel_name+'<br>\n' +
+                    content: '<strong>'+scheduled_arrivals[i].vessel_name+'</strong><br>\n' +
                         scheduled_arrivals[i].total+'Box/' + scheduled_arrivals[i].vessel_loa+'M<br>\n' +
                         'Jan. 30, 2019, noon (dfgdfg)\n',
                     style: "border-color: black;color: white; font-size: 9pt; height: calc("+scheduled_arrivals[i].vessel_loa+"px /2)",
@@ -294,7 +317,7 @@
 
                 'editable': {
                     'add': true,
-                    'remove': false,
+                    'remove': true,
                     'updateTime': true,
                     'updateGroup': true
                 },
@@ -314,8 +337,9 @@
 
                     return a.value - b.value;
                 },
-                onDropObjectOnItem: function (objectData, item, callback){
-                        console.log(objectData);
+                onRemove: function (item, callback){
+                    deleteFromBerthSchedule(item);
+                    callback(item);
                 },
 
                 min: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),                // lower limit of visible range to today - 1year

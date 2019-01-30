@@ -192,3 +192,22 @@ class BerthScheduleAPIView(APIView):
                          })
 
         return Response(resp)
+
+
+class BerthScheduleDeleteEditAPIView(APIView):
+
+    def get(self, request, va_id):
+        vessel_arrival = get_object_or_404(VesselArrival, id=va_id)
+        vessel_arrival.is_scheduled = False
+        vessel_arrival.schedule_details = {}
+        vessel_arrival.save()
+        return Response({'msg': 'Removed from schedule successfully.'})
+
+    def post(self, request, va_id):
+        vessel_arrival = get_object_or_404(VesselArrival, id=va_id)
+        vessel_arrival.is_scheduled = True
+        vessel_arrival.schedule_details = {'group': request.data.get('group'),
+                                           'start': request.data.get('start'),
+                                           'end': request.data.get('end')}
+        vessel_arrival.save()
+        return Response({'msg': 'Updated the schedule.'})

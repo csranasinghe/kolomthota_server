@@ -27,7 +27,6 @@
                     <th scope="col">STATUS</th>
                     <th scope="col">REF.NO</th>
                     <th scope="col">REMARKS</th>
-<th scope="col">View Details</th>
 <th scope="col">Review</th>
       </tr>
     </thead>
@@ -46,7 +45,6 @@
         <td>{{vessel.ref_no}}</td>
         <td>{{vessel.remarks}}</td>
 
-        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">View Details</button></td>
             {% if vessel.is_reviewed %}
         <td><button type="button" class="btn btn-primary approved" submission-id="{{ vessel.id }}">Approved</button></td>
             {% else %}
