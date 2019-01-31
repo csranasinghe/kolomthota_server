@@ -26,6 +26,11 @@
                Vessel Arrivals
                       </a>
                  </li>
+                     <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:schedule_published" %}" >
+               Berth Programme
+                      </a>
+                    </li>
                      {% else %}
                      <li class="nav-item">
                      <a class="nav-link" href="{% url "berth_planner:schedule_published" %}" >

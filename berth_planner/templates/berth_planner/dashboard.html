@@ -136,14 +136,12 @@
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom" style="height:100px">
 
                     <h2>Schedule</h2>
-                        <div id="message" class="alert alert-success alert-dismissible fade show" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <strong>Well done!</strong> You successfully read this important alert message.
+                        <div id="message" class="alert alert-info alert-dismissible fade show" role="alert">
+
+                            <span id="content">This box displays messages of activities</span>
                         </div>
                         <div class="btn-toolbar mb-2 mb-md-0">
-                            <button class="btn btn-sm btn-outline-secondary mr-2">Publish</button>
+                            <button id="publish" class="btn btn-sm btn-outline-secondary mr-2">Publish</button>
                         </div>
                     </div>
 
@@ -222,21 +220,39 @@
                 'data': item,
                 'url': '/api/berth-schedule',
                 'success': function (data) {
-                    alert(data);
+                    updateMessage(JSON.parse(data));
                 }
             });
         }
 
-        function deleteFromBerthSchedule(item, callback) {
+        function deleteFromBerthSchedule(item) {
             $.ajax({
                 'async': false,
                 'type': "GET",
                 'url': '/api/berth-schedule/'+item.id,
                 'success': function (data) {
-
-                    alert(data);
+                    updateMessage(data);
                 }
             });
+        }
+
+        // Publish
+        function updateBerthProgramme(vitems) {
+            $.ajax({
+                'type': "POST",
+                'dataType': "JSON",
+                'data': vitems,
+                'url': '/api/berth-schedule/update',
+                'success': function (data) {
+                    updateMessage(data);
+                }
+            });
+        }
+
+        function updateMessage(item){
+
+            $('#message').html(item.msg);
+
         }
 
         // Get CSRF token
@@ -258,13 +274,13 @@
 
         $(document).ready(function () {
 
+
             var today = new Date();
             var csrftoken = getCookie('csrftoken');
 
 
             // DOM element where the Timeline will be attached
             var container = document.getElementById('visualization');
-            var today = new Date();
 
 
             var berths = getAjaxData('/api/berths').map((berth, index) => {
@@ -299,7 +315,7 @@
             var options = {
                 showCurrentTime: true,
                 stack: false,
-                start: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+                start: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes()),
                 verticalScroll: true,
                 end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3, today.getHours()),
                 margin: {
@@ -342,7 +358,7 @@
                     callback(item);
                 },
 
-                min: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1),                // lower limit of visible range to today - 1year
+                min: new Date(today.getFullYear(), today.getMonth(), today.getDate()),                // lower limit of visible range to today - 1year
                 max: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),                // upper limit of visible range to today + 1year
                 zoomMin: 1000 * 60 * 60 * 12,             // one day in milliseconds
                 zoomMax: 1000 * 60 * 60 * 24 * 31 * 12     // about three months in milliseconds
@@ -388,10 +404,6 @@
             });
 
 
-            /**
-             * Move the timeline a given percentage to left or right
-             * @param {Number} percentage   For example 0.1 (left) or -0.1 (right)
-             */
             function move(percentage) {
                 var range = timeline.getWindow();
                 var interval = range.end - range.start;
@@ -459,11 +471,40 @@
             }
 
 
-            var items = document.querySelectorAll('.vessel-detail');
-            for (var i = items.length - 1; i >= 0; i--) {
-                var item = items[i];
+            var vitems = document.querySelectorAll('.vessel-detail');
+            for (var i = vitems.length - 1; i >= 0; i--) {
+                var item = vitems[i];
                 item.addEventListener('dragstart', handleDragStart.bind(this), false);
             }
+
+
+            $("#publish").click(function () {
+               var ids = timeline.getVisibleItems();
+               var dataItems = [];
+               var tdata = timeline.itemsData._data;
+
+               for (var i=0;i<ids.length;i++){
+                        if (tdata.hasOwnProperty(ids[i])){
+                            dataItem = {};
+                            dataItem.id = tdata[ids[i]].id;
+                            dataItem.start = tdata[ids[i]].start;
+                            dataItems.push(dataItem);
+                        }
+                }
+
+                var sortedVisibleItems = dataItems.sort(function (a, b) {
+                    return a.start > b.start ? 1 : a.start < b.start ? -1 : 1
+                });
+
+               var sorted = sortedVisibleItems.map((item)=>{
+                   return item.id
+               });
+               console.log(sorted);
+
+               publish_schedule = {'to': timeline.getWindow().start, 'from': timeline.getWindow().end, 'csrfmiddlewaretoken':csrftoken, 'berth_plan[]': sorted};
+               console.log({'published schedule': JSON.stringify(publish_schedule)});
+                updateBerthProgramme(publish_schedule);
+            });
 
 
         });

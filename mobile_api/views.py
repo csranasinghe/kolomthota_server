@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.shortcuts import get_object_or_404
 
@@ -7,7 +8,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from berth_planner.models import Berth
+from berth_planner.models import Berth, BerthAllocation
 from shipping_line.models import Vessel, VesselArrival
 from accounts.models import ShippingAgent, Account
 from .serializers import *
@@ -31,8 +32,8 @@ class VesselArrivalViewSet(ModelViewSet):
     """
 
     serializer_class = VesselArrivalSerializer
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         a = self.request.user
@@ -46,6 +47,7 @@ class ShippingAgentAPIView(APIView):
     API view to register new shipping line agents and update existing shipping line agents.
     TODO: Add put and get methods
     """
+
     def post(self, request):
         account_serializer = UserAccountSerializer(data=request.data)
         account_serializer.is_valid(raise_exception=True)
@@ -61,8 +63,8 @@ class ShippingAgentAPIView(APIView):
 
 
 class ShippingAgentDetails(APIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         a = request.user
@@ -90,6 +92,7 @@ class CheckUsernameAPIView(APIView):
     API view to check for username availability
     TODO: get the encrypted username and decrypt it using a secret which is known by trusted apps
     """
+
     def get(self, request, username_hash=None):
         if username_hash:
             account = get_object_or_404(Account, username=username_hash)
@@ -102,6 +105,7 @@ class PublishedScheduleAPIView(APIView):
     """
     API view to get the published schedule
     """
+
     def get(self, request):
         return Response({'from': "2019-01-29", 'to': "2019-01-31", 'schedule': [
             {
@@ -140,8 +144,8 @@ class PublishedScheduleAPIView(APIView):
 
 class UpcomingVesselArrivals(ListAPIView):
     serializer_class = UpcomingVesselArrivalsSerializer
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         a = self.request.user
@@ -164,13 +168,13 @@ class Logout(APIView):
 class BerthsList(ListAPIView):
     queryset = Berth.objects.all()
     serializer_class = BerthSerializer
-    authentication_classes = (SessionAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
 
 class BerthScheduleAPIView(APIView):
-    authentication_classes = (SessionAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request):
         vessel_arrival = get_object_or_404(VesselArrival, id=request.data.get('id', -1))
@@ -211,3 +215,48 @@ class BerthScheduleDeleteEditAPIView(APIView):
                                            'end': request.data.get('end')}
         vessel_arrival.save()
         return Response({'msg': 'Updated the schedule.'})
+
+
+def default(o):
+    if isinstance(o, (datetime.date, datetime.datetime)):
+        return o.isoformat()
+
+
+class BerthScheduleUpdate(APIView):
+    def post(self, request):
+        data = request.data
+        b_plan_id = [json.loads(item) for item in data.getlist('berth_plan[]', [])]
+        va_list = []
+
+        for b in b_plan_id:
+            va = VesselArrival.objects.get(id=b)
+            json_str = {
+                'id': va.id,
+                'eta': json.dumps(
+                    va.eta,
+                    sort_keys=True,
+                    indent=1,
+                    default=default
+                ),
+                'etb': json.dumps(
+                    va.schedule_details['start'],
+                    sort_keys=True,
+                    indent=1,
+                    default=default
+                ),
+                'berth_no': Berth.objects.get(id=va.schedule_details['group']).name,
+                'ref_no': va.ref_no,
+                'remarks': va.remarks,
+                'service': va.service,
+                'vessel_name': va.vessel.vessel_name,
+                'vessel_loa': str(va.vessel.vessel_loa),
+                'vessel_status': va.vessel.vessel_status,
+                'dis': str(va.dis),
+                'load': str(va.load),
+                'total': str(va.total)
+            }
+            va_list.append(json_str)
+        berth_allocation = BerthAllocation.objects.create(start_date=data.get('to'), end_date=data.get('from'),
+                                                          schedule_details={'va_list': va_list})
+
+        return Response({'msg': 'Berth programme updated.'})

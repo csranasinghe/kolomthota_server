@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import JSONField
 
 class Berth(models.Model):
     name = models.CharField(max_length=10)
@@ -17,4 +17,6 @@ class Berth(models.Model):
 
 
 class BerthAllocation(models.Model):
-    berth = models.ForeignKey('berth_planner.Berth', )
+    start_date = models.CharField(max_length=200, null=True, blank=True)
+    end_date = models.CharField(max_length=200, null=True, blank=True)
+    schedule_details = JSONField(null=True, blank=True)
