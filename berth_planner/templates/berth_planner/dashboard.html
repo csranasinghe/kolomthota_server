@@ -97,7 +97,22 @@
         .vis-selected{
             background-color: darkblue !important;
         }
+
+
+        .vis-group.berth-warning{
+            background-color: #ff5e2878;
+        }
+
+        .vis-group.berth-success{
+            background-color: #3fc55e87;
+        }
+
+        .drag-start{
+            opacity: 0.5;
+        }
         /* End timeline custom styling kolomthota */
+
+
 
 
     </style>
@@ -249,11 +264,23 @@
             });
         }
 
-        function updateMessage(item){
-
-            $('#message').html(item.msg);
-
+        function addVesselArrivalToList(item){
+            let html_context = '<li id="'+ item.id +'" class="vessel-detail" draggable="true">' +
+                '<div class="vessel-div" style="width: 100%; text-align: center ;border-color: black;' +
+                'height: calc('+ item.loa +'px /2); background-color: darkblue;' +
+                'font-size: 9pt; color: white;">' + item.content + '</div>' +
+                '</li>';
+            $("#vessel-details-list").append(html_context);
         }
+
+// Util functions
+
+        function updateMessage(item){
+            $('#message').html(item.msg);
+        }
+
+
+
 
         // Get CSRF token
         function getCookie(name) {
@@ -271,6 +298,17 @@
             }
             return cookieValue;
         }
+
+        function vesselArrivalItemSerializer(item) {
+            data = {};
+            data.csrfmiddlewaretoken = getCookie('csrftoken');
+            data.id = item.id;
+            data.group = item.group;
+            data.start = item.start;
+            data.end =  item.end;
+            return data;
+        }
+        //////////////////////////////////////////
 
         $(document).ready(function () {
 
@@ -290,15 +328,17 @@
                     content: berth.name,
                     max_length: berth.max_length,
                     max_across: berth.max_across,
-                    max_draft: berth.max_draft
+                    max_draft: berth.max_draft,
+                    className: 'gp-cl-'+berth.id
                 }
             });
 
             var scheduled_arrivals =  getAjaxData('/api/berth-schedule');
-            var items = []
+            var items = [];
             for (var i=0; i < scheduled_arrivals.length; i++){
                 items.push({
                     id: scheduled_arrivals[i].id,
+                    loa: scheduled_arrivals[i].vessel_loa,
                     group: scheduled_arrivals[i].schedule_details.group,
                     align: 'center',
                     content: '<strong>'+scheduled_arrivals[i].vessel_name+'</strong><br>\n' +
@@ -315,6 +355,7 @@
             var options = {
                 showCurrentTime: true,
                 stack: false,
+                multiselect: false,
                 start: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes()),
                 verticalScroll: true,
                 end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3, today.getHours()),
@@ -354,10 +395,24 @@
                     return a.value - b.value;
                 },
                 onRemove: function (item, callback){
+                    addVesselArrivalToList(item);
                     deleteFromBerthSchedule(item);
                     callback(item);
                 },
-
+                onMoving: function (item, callback){
+                    console.log('onmoving...');
+                    callback(item);
+                },
+                onUpdate: function (item, callback){
+                    console.log('on update...');
+                    callback(item);
+                },
+                onMove: function (item, callback){
+                    console.log('Item move recorded.');
+                    let va = vesselArrivalItemSerializer(item);
+                    addToBerthSchedule(va);
+                    callback(item);
+                },
                 min: new Date(today.getFullYear(), today.getMonth(), today.getDate()),                // lower limit of visible range to today - 1year
                 max: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),                // upper limit of visible range to today + 1year
                 zoomMin: 1000 * 60 * 60 * 12,             // one day in milliseconds
@@ -365,34 +420,7 @@
 
             };
 
-            var groups = [
 
-                {
-                    id: 1,
-                    value: 1,
-                    content: '1MN',
-                    berthHeight: 300,
-                    className: ""
-                    //  style: "min-height:100px;max-height:100px"
-                    // Optional: a field 'className', 'style', 'order', [properties]
-                },
-                {
-                    id: 2,
-                    value: 2,
-                    content: '1MS',
-                    berthHeight: 332
-                    // Optional: a field 'className', 'style', 'order', [properties]
-                },
-                {
-                    id: 3,
-                    value: 3,
-                    content: '2MN',
-                    berthHeight: 300
-                    // Optional: a field 'className', 'style', 'order', [properties]
-                },
-
-                // more groups...
-            ];
 
             // Create a Timeline
 
@@ -429,10 +457,10 @@
                 move(-0.2);
             };
 
-
             function handleDragStart(event) {
+                console.log("Drag start...");
                 hidden_data = JSON.parse(event.target.querySelector('span').innerHTML.trim());
-                $("#vessel-details-list #" + hidden_data.id).fadeTo('fast', 0.5);
+                $("#vessel-details-list #" + hidden_data.id).addClass('drag-start');
                 var dragSrcEl = event.target;
 
                 event.dataTransfer.effectAllowed = 'move';
@@ -441,10 +469,13 @@
                     id: hidden_data.id,
                     type: 'range',
                     style: 'height:' + hidden_data.loa / 2 + 'px',
-                    content: event.target.querySelector('div').innerHTML
+                    content: event.target.querySelector('div').innerHTML,
+                    loa: hidden_data.loa
                 };
                 // set event.target ID with item ID
                 event.target.id =  hidden_data.id;
+
+                checkBerthLOA(hidden_data.loa);
 
                 event.dataTransfer.setData("text", JSON.stringify(item));
                 // Trigger on from the new item dragged when this item drag is finish
@@ -453,20 +484,16 @@
 
             function handleDragEnd(event) {
                 // Last item that just been dragged, its ID is the same of event.target
-                var newItem_dropped = timeline.itemsData.get(event.target.id);
+                let newItem_dropped = timeline.itemsData.get(event.target.id);
 
-                if (newItem_dropped != undefined) {
-                    data = {}
-                    $("#vessel-details-list #" + newItem_dropped.id).remove();
-                    data.csrfmiddlewaretoken = csrftoken;
-                    data.id = newItem_dropped.id;
-                    data.group = newItem_dropped.group;
-                    data.start = newItem_dropped.start;
-                    data.end = newItem_dropped.end;
+                clearAdditionalClasses();
 
-                    addToBerthSchedule(data);
+                if (newItem_dropped == undefined) {
+                    $("#vessel-details-list #" + event.target.id).removeClass('drag-start');
                 } else {
-                    $("#vessel-details-list #" + newItem_dropped.id).fadeTo('fast', 1);
+                    $("#vessel-details-list #" + newItem_dropped.id).remove();
+                    let new_item = vesselArrivalItemSerializer(newItem_dropped);
+                    addToBerthSchedule(new_item);
                 }
             }
 
@@ -477,6 +504,31 @@
                 item.addEventListener('dragstart', handleDragStart.bind(this), false);
             }
 
+                     //Check available berths according to the given LOA
+
+
+            function checkBerthLOA(loa) {
+                let tbl = timeline.groupsData._data;
+                console.log('Checking for available berth loa ...');
+                for (key in tbl) {
+                    tb = tbl[key];
+                    if (tb.max_length >= loa)
+                        $('.gp-cl-' + tb.id).addClass('berth-success');
+                    else
+                        $('.gp-cl-' + tb.id).addClass('berth-warning');
+                }
+
+            }
+
+
+            //This function will clear additional classes added to the timeline groups
+            function clearAdditionalClasses() {
+                let tbl = timeline.groupsData._data;
+                for (k in tbl) {
+
+                    $('.gp-cl-' + tbl[k].id).attr('class', 'vis-group' + ' gp-cl-' + tbl[k].id);
+                }
+            }
 
             $("#publish").click(function () {
                var ids = timeline.getVisibleItems();
