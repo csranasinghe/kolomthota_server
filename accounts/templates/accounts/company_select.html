@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static " accounts/css/login.css" %}">
+{% endblock extra_head %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/login.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content_main %}
+
+
+
+
+{% block content_middle %}
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="card" style="width: 500px;height:400px;text-align:center;margin: 0 auto;float: none;margin-bottom: 10px;margin-top: 100px;">
+
+            <div class="card-body">
+                <img src="{% static " img/logo.png" %}" style="height:100px">
+                <h1 class="card-title">{{person}} Company Registration</h1>
+
+                <form method="GET" action="company">
+
+                    {% csrf_token %}
+
+                    <ul>
+                        <p style="align:center">Please choose Your company</p>
+                        <li style="display: none">
+                            <input type="text" name="shipping_agent" id="id_shipping_agent" value="{{ person.id }}">
+                            </input>
+                        </li>
+
+                        <li>Company
+                            <select name="optradio">
+                                {% for com in company %}
+                                <option value="{{com}}">{{com}}</option>
+
+                                {% endfor %}
+                            </select>
+                        </li>
+
+                    </ul>
+
+                    <br />
+                    <button type="submit" class="btn btn-info" value="Save">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3"></div>
+
+</div>
+{% endblock content_middle %}
+
+
+{% endblock content_main %}

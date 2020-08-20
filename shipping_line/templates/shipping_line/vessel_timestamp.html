@@ -1,0 +1,105 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+<h1 style=" text-align: center" class="py-5">{{ request.user.sa_account.shipping_line }} vessel submissions </h1>
+<a class="btn btn-info my-3" role="button" data-toggle="modal" data-target="#myModal1">
+  Add new vessel arrival
+</a>
+<a class="btn btn-info" role="button" data-toggle="modal" data-target="#myModal2">
+  Add new vessel
+</a>
+
+<form action="{% url " shipping_line:viewHistory" %}" method="GET">
+  {% csrf_token %}
+  <input type="datetime-local" name="from_date" id="from_date" required>
+  <input type="datetime-local" name="to_date" id="to_date" required>
+  <input type="submit">
+</form>
+{{time}}
+{% for obj in obj %}
+<p>{{obj.vessel}}</p>
+<br />
+{% endfor %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Shipping Line Agent</th>
+      <th>ETA</th>
+      <th>dis</th>
+      <th>load</th>
+      <th>ref_no</th>
+      <th>draft_arrival</th>
+      <th>draft_diparture</th>
+      <th>remarks</th>
+      <th>service</th>
+      <th>lastport</th>
+      <th>nextport</th>
+      <th>vessel</th>
+      <th>View Details</th>
+      <th>Delete Details</th>
+      <th>Edit Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in object_list %}
+    <td>{{obj.shipping_agent}}</td>
+    <td>{{obj.eta.month }}</td>
+    <td>{{obj.dis}}</td>
+    <td>{{obj.load}}</td>
+    <td>{{obj.ref_no}}</td>
+    <td>{{obj.draft_arrival}}</td>
+    <td>{{obj.draft_departure}}</td>
+    <td>{{obj.remarks}}</td>
+    <td>{{obj.service}}</td>
+    <td>{{obj.last_port}}</td>
+    <td>{{obj.next_port}}</td>
+    <td>{{obj.vessel}}</td>
+    <td><button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">View</button></td>
+
+    <td>
+      <input type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items/{{obj.id}}';"
+        value="Delete" />
+    </td>
+    <td>
+      <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
+        value="Edit" />
+    </td>
+    </tr>
+
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 style="text-align:center" class="modal-title">Vessel Submission Details</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <h4>This option is under development.</h4>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    {% endfor %}
+
+  </tbody>
+</table>
+
+
+
+
+
+{% endblock content_middle %}

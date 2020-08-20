@@ -1,0 +1,29 @@
+{% block extra_js %}
+    <script>
+        $(function () {
+                var showPopover = function () {
+                    $(this).popover('show');
+                }
+                , hidePopover = function () {
+                    $(this).popover('hide');
+                };
+        $('#ex1').popover({
+                    content: 'An Example1 popover',
+                    trigger: 'hover',
+                    placement:'top'
+                })
+        $('#ex2').popover({
+                    content: 'An Example2 popover',
+                    trigger: 'hover',
+                    placement:'top'
+                })
+
+        $('#ex3').popover({
+                    content: 'An Example3 popover',
+                    trigger: 'hover',
+                    placement:'top'
+                })
+
+});
+    </script>
+{% endblock extra_js %}

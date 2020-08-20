@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+    {% block navbar %}
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url "accounts:index" %}">
+                <img src="{% static "img/logo.png" %}" width="30" height="30" class="d-inline-block align-top mr-3" alt="">
+                Kolomthota
+            </a>
+             <ul class="nav navbar-nav navbar-right">
+                {% if request.user.user_type == 'BP' or request.user.user_type == 'VP' or request.user.user_type == 'DM'  %}
+                    <li class="nav-item">
+                            <a class="nav-link" href="/chat/groupchat" >
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                           </a>
+                            
+                     </li>
+                     {% endif %}
+                     {% block navbar_mid %} {% endblock navbar_mid %}
+                     
+                 {% if request.user.user_type == 'BP' %}
+                 
+                 <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:vessel_arrivals" %}" >
+               Vessel Arrivals
+                      </a>
+                 </li>
+                     <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:schedule_published" %}" >
+               Berth Programme
+                      </a>
+                    </li>
+                     {% else %}
+                     <li class="nav-item">
+                     <a class="nav-link" href="{% url "berth_planner:schedule_published" %}" >
+               Berth Programme
+                      </a>
+                    </li>
+                 {% endif %}
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               {{ request.user.get_full_name }}
+                      </a>
+                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        
+                       <div class="dropdown-content">
+                       <a class="dropdown-item" href="{% url "accounts:viewProfile" %}">Profile</a>
+                       <a class="dropdown-item" href="{% url "accounts:logout" %}">Logout</a>
+                       </div>
+                </div>
+
+
+                
+              </li>
+            </ul>
+        </div>
+    </nav>
+        {% endblock navbar %}
+{% endblock header %}
+{% block extra_head %}
+    <style>
+
+    .navbar-brand{
+        font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+        font-size: 1.5rem;
+    }
+    </style>
+    <script type="text/javascript">
+        function toggle_div_fun(id) {
+    
+           var divelement = document.getElementById(id);
+    
+           if(divelement.style.display == 'none')
+              divelement.style.display = 'block';
+           else
+              divelement.style.display = 'none';
+        }
+    </script>
+{% endblock extra_head %}
+{% include 'snippets/navbar_js.html' %}

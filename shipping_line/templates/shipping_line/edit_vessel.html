@@ -1,0 +1,41 @@
+{% extends 'shipping_line/index.html' %}
+
+{% block content_middle %}
+<h1 style=" text-align: center">Edit details</h1>
+
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+
+        <div class="alert alert-warning">
+            <strong>Warning!</strong> Please fill only fields which must be updated
+        </div>
+        <div style="text-align:left">
+            <h6> <strong>Vessel Name : </strong>{{vessel.vessel_name}}</h6>
+        </div>
+        <form method="GET" action="edit_vessel">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+                <label for="vessel_loa">{{form.vessel_loa.label_tag}} </label>
+                <input type="number" class="form-control" id="vessel_loa" name='vessel_loa' placeholder={{vessel.vessel_loa}}>
+            </div>
+            <div class="form-group">
+                <label for="vessel_status">{{form.vessel_status.label_tag}} </label>
+                <input type="text" class="form-control" id="vessel_status" name='vessel_status' placeholder={{vessel.vessel_status}}>
+            </div>
+            <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author" value="{{ request.user.id }}"></input></li>
+
+            <button type="submit" class="btn btn-info" value="Save">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="col-sm-3"></div>
+</div>
+
+
+
+
+    {% endblock content_middle %}

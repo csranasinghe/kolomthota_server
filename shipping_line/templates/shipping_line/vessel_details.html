@@ -1,0 +1,440 @@
+{% extends 'shipping_line/index.html' %}
+
+{% load static %}
+
+{% block extra_refresh %}
+<meta http-equiv="refresh" content="300">
+{% endblock extra_refresh %}
+
+
+{% block extra_head %}
+{{block.super}}
+<link rel="stylesheet" href="{% static " shipping_line/css/notification.css" %}">
+
+{% endblock extra_head %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+{% endblock extra_js %}
+
+
+{% block content_middle %}
+<h1 style=" text-align: center" class="py-5">{{ request.user.sa_account.shipping_line }} vessel submissions </h1>
+
+
+
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    {% if messages %}
+
+
+
+    {% for message in messages %}
+    {%if "success" in message.tags %}
+    <div class="alert alert-success">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
+    {%elif "failed" in message.tags%}
+    <div class="alert alert-danger">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
+    {%elif "failed-vessel" in message.tags%}
+    <div class="alert alert-danger">
+      <li class="{{ message.tags }}">{{ message }}</li>
+    </div>
+    {%endif%}
+    {% endfor %}
+  {% endif %}
+</div>
+<div class="col-sm-2"></div>
+</div>
+<div class="row">
+  <div class="col-sm-2">
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+        <button type="button" class="btn btn-info" disabled>Add new vessel arrival</button>
+      </span>
+      {% else %}
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal1">
+      Add new vessel arrival
+    </button>
+    {% endif %}
+  </div>
+  <div class="col-sm-3">
+
+    <div class="btn-group ">
+      <button type="button" class="btn btn-info" disabled>Vessel Details</button>
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+      <button type="button" class="btn btn-info" disabled>
+          <i class="fa fa-plus"> Add</i>
+      </button>
+      </span>
+      {% else %}
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal2">
+
+        <i class="fa fa-plus"> Add</i>
+      </button>
+      {% endif %}
+
+      {% if request.user.sa_account.is_active_agent == False %}
+      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+      <button type="button" class="btn btn-info" disabled>
+        <i class="fa fa-pencil"> View</i>
+      </button>
+      </span>
+      {% else %}
+      <button type="button" class="btn btn-info" onclick="location.href='/shipping-line/vessel-details/';">
+        <i class="fa fa-pencil"> View</i>
+      </button>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-sm-2"></div>
+  <div class="col-sm-1">
+
+    <button type="button" class="btn  btn-info" data-toggle="modal" data-target="#myModal3">
+      <i class="fa fa-search "> History</i>
+    </button>
+
+  </div>
+
+  <div class="col-sm-3">
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  </div>
+  <div class="col-sm-1">
+    {% if request.user.sa_account.is_active_agent == True %}
+    <button type="button" class="btn btn-danger" onclick="location.href='/shipping-line/notification/';">
+      <i class="fa fa-bell">
+        <span class="batch">{{count}}</span>
+      </i>
+    </button>
+    {%endif%}
+  </div>
+</div>
+
+
+<br />
+<table class="table table-hover table-bordered text-center">
+  <thead>
+    <tr class="table-active">
+      <th>Shipping Line Agent</th>
+      <th>ETA</th>
+      <th>dis</th>
+      <th>load</th>
+      <th>ref_no</th>
+      <th>draft<br />arrival</th>
+      <th>draft<br />diparture</th>
+      <th>remarks</th>
+      <th>service</th>
+      <th>lastport</th>
+      <th>nextport</th>
+      <th>vessel</th>
+      <th>View Details</th>
+      <th>Edit Details</th>
+      <th>Delete Details</th>
+
+    </tr>
+  </thead>
+  <tbody id="myTable">
+    
+      {% for obj in object_list %}
+      {% if obj.is_rejected_user == True or obj.is_rejected_BP == True %}
+      <tr class="table-danger" >
+      {% elif obj.first_confirm == False %}
+      <tr class="table-warning">
+      {% elif obj.second_confirm == False %} 
+      <tr class="table-info">
+      {% elif obj.third_confirm == False %} 
+      <tr class="table-success">
+      {% else %} 
+      <tr class="table-active">
+      {% endif %}
+      <td>{{obj.shipping_agent}}</td>
+      <td>{{obj.eta}}</td>
+      <td>{{obj.dis}}</td>
+      <td>{{obj.load}}</td>
+      <td>{{obj.ref_no}}</td>
+      <td>{{obj.draft_arrival}}</td>
+      <td>{{obj.draft_departure}}</td>
+      <td>{{obj.remarks}}</td>
+      <td>{{obj.service}}</td>
+      <td>{{obj.last_port}}</td>
+      <td>{{obj.next_port}}</td>
+      <td>{{obj.vessel}}</td>
+      <td>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True%}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+          <button type="button" class="btn btn-outline-success" disabled>Progress</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+          <button type="button" class="btn btn-outline-success" disabled>Progress</button>
+          </span>
+          {% else %}
+        <button type="button" class="btn btn-outline-success" onclick="location.href='/shipping-line/vessel-progress/{{obj.id}}';">Progress</button>
+          {%endif%}
+      </td>
+
+      <td>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+            <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+            <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+          </span>
+          {% elif obj.third_confirm == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are no longer allow to edit">
+              <button type="button" class="btn btn-outline-info" disabled>Edit</button>
+            </span>
+          {% else %}
+        <input type="button" class="btn btn-outline-info" onclick="location.href='/shipping-line/edit_vessels/{{obj.id}}';"
+          value="Edit" />
+          {% endif %}
+      </td>
+
+      <td>
+          {% if obj.is_rejected_user == True or obj.is_rejected_BP == True  %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Vessel is removed ">
+            <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+          </span>
+          {% elif request.user.sa_account.is_active_agent == False %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are dissabled Please contact harbour">
+            <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+          </span>
+          {% elif obj.third_confirm == True %}
+          <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You are no longer allow to delete">
+              <button type="button" class="btn btn-outline-danger" disabled>Delete</button>
+            </span>
+          {% else %}
+        <button type="button" class="btn btn-outline-danger" onclick="location.href='/shipping-line/remove_items/{{obj.id}}';">Delete</button>
+            {% endif %}
+      </td>
+    </tr>
+
+    <div class="modal fade" id="myModal4">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 style="text-align:center" class="modal-title">Delete</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <h4>Are you sure ?</h4>
+            <button type="button" class="btn btn-outline-danger" >Yes</button>
+            <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 style="text-align:center" class="modal-title">Vessel Submission Details</h4>
+            <button type="button" class="close" data-dismiss="modal">×</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <h4>{{obj.ref_no}}</h4>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<div class="modal fade" id="myModal2">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Add New Vessel </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="form_type" id="form_type"
+              value="1"></input></li>
+
+          <div class="form-group">
+            <label for="vessel_name">Vessel Name:</label>
+            <input type="text" class="form-control" id="vessel_name" name="vessel_name" required>
+          </div>
+          <div class="form-group">
+            <label for="vessel_name">Vessel loa:</label>
+            <input type="number" class="form-control" id="vessel_loa" name="vessel_loa" required>
+          </div>
+          <h6>Type :</h6>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="vessel_status" value="M" required>Main Line
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="vessel_status" value="F" required>Feeder Line
+            </label>
+          </div>
+
+          <li style="display: none">{{form_one.author.label_tag}} <input type="text" name="author" id="author" value="{{ request.user.id }}"></input></li>
+
+          <br />
+          <button type="submit" class="btn btn-info" value="Save">Submit</button>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="myModal1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">New vessel arrival</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form method="POST" action="">
+
+          {% csrf_token %}
+
+          <li style="display: none"> <input type="text" name="form_type" id="form_type" value="2"></input></li>
+
+
+          <li style="display: none">{{form.shipping_agent.label_tag}} <input type="text" name="shipping_agent" id="shipping_agent"
+              value="{{ request.user.id }}"></input></li>
+          
+          <li>{{form.vessel.label_tag}} {{form.vessel}}</li>
+          <div class="form-group">
+            <label for="from_date">Date :</label>
+            <input type="datetime-local" class="form-control" id="eta"  name='eta' placeholder="2018-09-06 16:02:50">
+          </div>
+          <div class="form-group">
+            <label for="dis">Vessel dis:</label>
+            <input type="number" class="form-control" id="dis" name="dis" required>
+          </div>
+          <div class="form-group">
+            <label for="load">Vessel load:</label>
+            <input type="number" class="form-control" id="load" name="load" required>
+          </div>
+          <div class="form-group">
+            <label for="ref_no">Ref No:</label>
+            <input type="text" class="form-control" id="ref_no" name="ref_no" required>
+          </div>
+          <div class="form-group">
+            <label for="draft_arrival">Draft Arival:</label>
+            <input type="number" step="0.1" class="form-control" id="draft_arrival" name="draft_arrival" required>
+          </div>
+          <div class="form-group">
+            <label for="draft_departure">Draft Departure:</label>
+            <input type="number" step="0.1" class="form-control" id="draft_departure" name="draft_departure" required>
+          </div>
+          <div class="form-group">
+            <label for="remarks">Remarks :</label>
+            <input type="comment" class="form-control" id="remarks" name="remarks" required>
+          </div>
+          <div class="form-group">
+            <label for="service">Service :</label>
+            <input type="text" class="form-control" id="service" name="service" required>
+          </div>
+          <div class="form-group">
+            <label for="last_port">Last Port:</label>
+            <input type="text" class="form-control" id="last_port" name="last_port" required>
+          </div>
+          <div class="form-group">
+            <label for="next_port">Next Port:</label>
+            <input type="text" class="form-control" id="next_port" name="next_port" required>
+          </div>
+
+          <br />
+          <button type="submit" class="btn btn-info" value="Save">Submit</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal3">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title"> History </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="history/" method="GET">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="from_date">To:</label>
+            <input type="datetime-local" class="form-control" id="from_date" name="from_date">
+          </div>
+          <div class="form-group">
+            <label for="to_date">From:</label>
+            <input type="datetime-local" class="form-control" id="to_date" name="to_date">
+          </div>
+          <button type="submit" class="btn btn-info" value="Save">Submit</button>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock content_middle %}

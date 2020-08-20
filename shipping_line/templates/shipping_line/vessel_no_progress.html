@@ -1,0 +1,19 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="alert alert-danger">
+            The ship is not yet in the harbour to proceed
+        </div>
+        <div>
+            <input type="button" class="btn btn-info" onclick="location.href='/';" value="Go Back" />
+        </div>
+
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+
+{% endblock content_middle %}

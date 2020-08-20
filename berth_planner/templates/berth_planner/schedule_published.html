@@ -1,0 +1,98 @@
+{% extends 'base_navbar.html' %}
+{% load static %}
+{% load schedule_extra_tags %}
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "berth_planner/css/schedule_published.css" %}">
+{% endblock extra_head %}
+{% block content_main %}
+    <div class="sub-ves-tbl ">
+        <div class="print">
+            <div class="row">
+                <div class="col-md-offset-10 col-md-2">
+                    <p>Date : {% now "jS F Y H:i" %}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>JAYA CONTAINER TERMINAL</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>SRI LANKA PORTS AUTHORITY</h5>
+                </div>
+            </div>
+            <div class="row row2">
+                <div class="col-md-4 row3">
+                    <strong> BERTHING PROGRAMME</strong>
+                </div>
+                <div class="col-md-4 row3">
+                    <div class="col-md-12">
+                        <strong>From : {{ berth_allocation.start_date }}</strong>
+                    </div>
+                </div>
+                <div class="col-md-4 row3">
+                    <div class="col-md-12">
+                        <strong>To : {{ berth_allocation.end_date }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row print">
+            <div class="col-md-12 row4">
+                <div>
+                    <center></center>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover ml-1 print">
+                <thead>
+                <tr>
+                 <th scope="col">ETB</th>
+                    <th scope="col">ETA</th>
+
+                    <th scope="col">B/NO</th>
+                    <th scope="col">VESSEL</th>
+                    <th scope="col">DIS</th>
+                    <th scope="col">LOAD</th>
+                    <th scope="col">TOTAL</th>
+                    <th scope="col">LOA</th>
+                    <th scope="col">Service</th>
+                    <th scope="col">STATUS</th>
+                    <th scope="col">REF.NO</th>
+                    <th scope="col">REMARKS</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for varrival in schedule_list %}
+                    <tr>
+
+<td>
+                            {{varrival|get_item:'etb'}}
+
+                        </td>
+                        <td>
+                            {{varrival|get_item:'eta'}}
+                        </td>
+                        <td>{{varrival|get_item:'berth_no'}}</td>
+                        <td>{{varrival|get_item:'vessel_name'}}</td>
+                        <td>{{varrival|get_item:'dis'}}</td>
+                        <td>{{varrival|get_item:'load'}}</td>
+                        <td>{{varrival|get_item:'total'}}</td>
+                        <td>{{varrival|get_item:'vessel_loa'}}m</td>
+                        <td>{{varrival|get_item:'service'}}</td>
+                        <td>{{varrival|get_item:'vessel_status'}}</td>
+                        <td>{{varrival|get_item:'ref_no'}}</td>
+                        <td>{{varrival|get_item:'remarks'}}</td>
+
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+<button class="btn btn-primary" onclick="window.print();">Print</button>
+{% endblock content_main %}

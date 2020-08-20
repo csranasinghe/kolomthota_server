@@ -1,0 +1,60 @@
+{% extends 'shipping_line/index.html' %}
+
+
+{% block content_middle %}
+
+<h1 style=" text-align: center">Edit Details</h1>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+
+        <div class="alert alert-warning">
+            <strong>Warning!</strong> Please fill only fields which must be updated
+        </div>
+        <div style="text-align:left">
+            <h6> <strong>Vessel Name : </strong>{{vessel.vessel}}</h6>
+                <h6><strong>Vessel Ref No : </strong>{{vessel.ref_no}}</h6>
+        </div>
+        <form method="GET" action="edit">
+        
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="eta">{{form.eta.label_tag}}</label>
+                <input type="datetime-local" class="form-control" id="eta" name='eta' placeholder="2018-09-06 16:02:50">
+              </div>
+              <div class="form-group">
+                <label for="dis">{{form.dis.label_tag}} </label>
+                <input type="number" class="form-control" id="dis" name='dis' placeholder={{vessel.dis}}>
+              </div>
+              <div class="form-group">
+                <label for="load">{{form.load.label_tag}} </label>
+                <input type="number" class="form-control" id="load" name='load' placeholder={{vessel.load}}>
+              </div>
+              <div class="form-group">
+                <label for="draft_arrival">{{form.draft_arrival.label_tag}} </label>
+                <input type="number" class="form-control" id="draft_arrival" step="0.01" name='draft_arrival' placeholder={{vessel.draft_arrival}}>
+              </div>
+              <div class="form-group">
+                <label for="draft_departure">{{form.draft_departure.label_tag}} </label>
+                <input type="number" class="form-control" id="draft_departure" step="0.01" name='draft_departure' placeholder={{vessel.draft_departure}}>
+              </div>
+              <div class="form-group">
+                <label for="service">{{form.service.label_tag}} </label>
+                <input type="text" class="form-control" id="service" name='service' placeholder={{vessel.service}}>
+              </div>
+           
+        
+            <button type="submit" class="btn btn-info" value="Save">Submit</button>
+        </form>
+    </div>
+</div>
+<div class="col-sm-3"></div>
+</div>
+<div>
+
+
+
+
+
+{% endblock content_middle %}

@@ -1,0 +1,567 @@
+{% extends 'base_navbar.html' %}
+{% load static %}
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'berth_planner/css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vis.css' %}">
+
+
+    <style>
+
+        #vessel-details-list {
+            border: 1px solid #eee;
+            height: 100%;
+            list-style-type: none;
+            margin: 0;
+            margin-right: 10px;
+            padding: 0px;
+        }
+
+        #vessel-details-list li {
+            margin: 0 5px 5px 5px;
+            padding: 5px;
+            font-size: 1.2em;
+            width: 100%;
+
+        }
+
+
+        #visualization {
+            position: relative;
+        }
+
+        #visualization .menu {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+            z-index: 9999;
+        }
+
+        #vessel-details-list {
+            list-style: none;
+        }
+
+
+        .hidden-details {
+            display: none;
+        }
+
+        .vessel-detail:hover {
+            cursor: move;
+        }
+
+        /* tIMELINE CUSTOM STYLING KOLOMTHOTA */
+
+        .vis-timeline {
+            border: 2px solid black;
+            font-size: 12pt;
+            background: #FAD6A5;
+        }
+
+        .vis-time-axis .vis-text {
+            color: black;
+            padding-top: 10px;
+            padding-left: 10px;
+        }
+
+        .vis-time-axis .vis-text.vis-major {
+            font-weight: bold;
+        }
+
+        .vis-time-axis .vis-grid.vis-minor {
+            border-width: 1px;
+            border-color: black;
+        }
+
+        .vis-time-axis .vis-grid.vis-major {
+            border-width: 1px;
+            border-color: gray;
+        }
+
+        .vis-item {
+
+            width: 100%;
+            border-color: black;
+            background-color: darkblue;
+            font-size: 9pt;
+            color: white;
+            background-color: #3f51b5;
+
+        }
+        .vis-item .vis-item-content{
+                text-align: center;
+        }
+
+        .vis-selected{
+            background-color: darkblue !important;
+        }
+
+
+        .vis-group.berth-warning{
+            background-color: #ff5e2878;
+        }
+
+        .vis-group.berth-success{
+            background-color: #3fc55e87;
+        }
+
+        .drag-start{
+            opacity: 0.5;
+        }
+        /* End timeline custom styling kolomthota */
+
+
+
+
+    </style>
+
+{% endblock extra_head %}
+
+{% block content_main %}
+    <section class="py-5 px-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 d-none d-md-block bg-light sidebar">
+                    <div class="sidebar-sticky">
+
+                        <ul id="vessel-details-list" class="flex-column mb-2 ">
+                            {% for varrival in vessel_arrivals %}
+                                <li id="{{ varrival.id }}" class="vessel-detail" draggable="true">
+                                    <div class="vessel-div" style="width: 100%; text-align: center ;border-color: black;
+                                            height: calc({{ varrival.vessel.vessel_loa }}px /2);
+                                            background-color: darkblue;
+                                            font-size: 9pt;
+                                            color: white;">
+                                        <strong>{{ varrival.vessel.vessel_name }}</strong><br/>
+                                        {{ varrival.total }}Box/{{ varrival.vessel.vessel_loa }}M<br/>
+                                        {{ varrival.eta }} ({{ varrival.service }})
+                                        <span class="hidden-details">{"id": {{ varrival.id }}, "loa": {{ varrival.vessel.vessel_loa }} }</span>
+
+                                    </div>
+
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom" style="height:100px">
+
+                    <h2>Schedule</h2>
+                        <div id="message" class="alert alert-info alert-dismissible fade show" role="alert">
+
+                            <span id="content">This box displays messages of activities</span>
+                        </div>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <button id="publish" class="btn btn-sm btn-outline-secondary mr-2">Publish</button>
+                        </div>
+                    </div>
+
+                    <div id="visualization" class="my-4" style="display: block;">
+                        <div class="menu">
+                            <input type="button" id="zoomIn" value="Zoom in"/>
+                            <input type="button" id="zoomOut" value="Zoom out"/>
+                            <input type="button" id="moveLeft" value="Move left"/>
+                            <input type="button" id="moveRight" value="Move right"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 style="text-align:center" class="modal-title">Vessel Arrival Details</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h4>This option is under development.</h4>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock content_main %}
+
+
+{% block extra_js %}
+    {{ block.super }}
+
+    <script src="{% static 'js/vis.js' %}"></script>
+
+
+
+
+    <!-- Timeline js -->
+    <script>
+        function getAjaxData(url) {
+            var tmp = null;
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'contentType': "application/json; charset=utf-8",
+                'dataType': "json",
+                'url': url,
+                'success': function (data) {
+                    tmp = data;
+                }
+            });
+            return tmp;
+        }
+
+        function addToBerthSchedule(item) {
+            $.ajax({
+
+                'type': "POST",
+                'dataType': "text",
+                'data': item,
+                'url': '/api/berth-schedule',
+                'success': function (data) {
+                    updateMessage(JSON.parse(data));
+                }
+            });
+        }
+
+        function deleteFromBerthSchedule(item) {
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'url': '/api/berth-schedule/'+item.id,
+                'success': function (data) {
+                    updateMessage(data);
+                }
+            });
+        }
+
+        // Publish
+        function updateBerthProgramme(vitems) {
+            $.ajax({
+                'type': "POST",
+                'dataType': "JSON",
+                'data': vitems,
+                'url': '/api/berth-schedule/update',
+                'success': function (data) {
+                    updateMessage(data);
+                }
+            });
+        }
+
+        function addVesselArrivalToList(item){
+            let html_context = '<li id="'+ item.id +'" class="vessel-detail" draggable="true">' +
+                '<div class="vessel-div" style="width: 100%; text-align: center ;border-color: black;' +
+                'height: calc('+ item.loa +'px /2); background-color: darkblue;' +
+                'font-size: 9pt; color: white;">' + item.content + '</div>' +
+                '</li>';
+            $("#vessel-details-list").append(html_context);
+        }
+
+// Util functions
+
+        function updateMessage(item){
+            $('#message').html(item.msg);
+        }
+
+
+
+
+        // Get CSRF token
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function vesselArrivalItemSerializer(item) {
+            data = {};
+            data.csrfmiddlewaretoken = getCookie('csrftoken');
+            data.id = item.id;
+            data.group = item.group;
+            data.start = item.start;
+            data.end =  item.end;
+            return data;
+        }
+        //////////////////////////////////////////
+
+        $(document).ready(function () {
+
+
+            var today = new Date();
+            var csrftoken = getCookie('csrftoken');
+
+
+            // DOM element where the Timeline will be attached
+            var container = document.getElementById('visualization');
+
+
+            var berths = getAjaxData('/api/berths').map((berth, index) => {
+                return {
+                    id: berth.id,
+                    value: berth.order,
+                    content: berth.name,
+                    max_length: berth.max_length,
+                    max_across: berth.max_across,
+                    max_draft: berth.max_draft,
+                    className: 'gp-cl-'+berth.id
+                }
+            });
+
+            var scheduled_arrivals =  getAjaxData('/api/berth-schedule');
+            var items = [];
+            for (var i=0; i < scheduled_arrivals.length; i++){
+                items.push({
+                    id: scheduled_arrivals[i].id,
+                    loa: scheduled_arrivals[i].vessel_loa,
+                    group: scheduled_arrivals[i].schedule_details.group,
+                    align: 'center',
+                    content: '<strong>'+scheduled_arrivals[i].vessel_name+'</strong><br>\n' +
+                        scheduled_arrivals[i].total+'Box/' + scheduled_arrivals[i].vessel_loa+'M<br>\n' +
+                        'Jan. 30, 2019, noon (dfgdfg)\n',
+                    style: "border-color: black;color: white; font-size: 9pt; height: calc("+scheduled_arrivals[i].vessel_loa+"px /2)",
+                    start: new Date(scheduled_arrivals[i].schedule_details.start),
+                    end: new Date(scheduled_arrivals[i].schedule_details.end)
+                });
+            }
+
+
+            // Configuration for the Timeline
+            var options = {
+                showCurrentTime: true,
+                stack: false,
+                multiselect: false,
+                start: new Date(today.getFullYear(), today.getMonth(), today.getDate(), today.getHours(), today.getMinutes()),
+                verticalScroll: true,
+                end: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3, today.getHours()),
+                margin: {
+                    item: {
+                        vertical: 26, // Distance between two bollards
+                        horizontal: 0
+                    }
+                },
+                zoomable: false,  // false
+                'orientation': {
+                    'axis': 'top'
+                },
+                'width': '100%',
+                // horizontalScroll: true,
+
+                'editable': {
+                    'add': true,
+                    'remove': true,
+                    'updateTime': true,
+                    'updateGroup': true
+                },
+                itemsAlwaysDraggable: {
+                    range: true
+                },
+                template: function (item, element, data) {
+                    return item.content;
+                },
+
+
+                snap: function (date, scale, step) {
+                    var hour = 60 * 60;
+                    return Math.round(date / hour) * hour;
+                },
+                groupOrder: function (a, b) {
+
+                    return a.value - b.value;
+                },
+                onRemove: function (item, callback){
+                    addVesselArrivalToList(item);
+                    deleteFromBerthSchedule(item);
+                    callback(item);
+                },
+                onMoving: function (item, callback){
+                    console.log('onmoving...');
+                    callback(item);
+                },
+                onUpdate: function (item, callback){
+                    console.log('on update...');
+                    callback(item);
+                },
+                onMove: function (item, callback){
+                    console.log('Item move recorded.');
+                    let va = vesselArrivalItemSerializer(item);
+                    addToBerthSchedule(va);
+                    callback(item);
+                },
+                min: new Date(today.getFullYear(), today.getMonth(), today.getDate()),                // lower limit of visible range to today - 1year
+                max: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),                // upper limit of visible range to today + 1year
+                zoomMin: 1000 * 60 * 60 * 12,             // one day in milliseconds
+                zoomMax: 1000 * 60 * 60 * 24 * 31 * 12     // about three months in milliseconds
+
+            };
+
+
+
+            // Create a Timeline
+
+
+            var timeline = new vis.Timeline(container, items, berths, options);
+            $('#btn_view_date').on('click', function () {
+                var date = new Date($("#view_date").val());
+                timeline.setWindow(date, new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
+            });
+
+
+            function move(percentage) {
+                var range = timeline.getWindow();
+                var interval = range.end - range.start;
+
+                timeline.setWindow({
+                    start: range.start.valueOf() - interval * percentage,
+                    end: range.end.valueOf() - interval * percentage
+                });
+            }
+
+
+            // attach events to the navigation buttons
+            document.getElementById('zoomIn').onclick = function () {
+                timeline.zoomIn(0.2);
+            };
+            document.getElementById('zoomOut').onclick = function () {
+                timeline.zoomOut(0.2);
+            };
+            document.getElementById('moveLeft').onclick = function () {
+                move(0.2);
+            };
+            document.getElementById('moveRight').onclick = function () {
+                move(-0.2);
+            };
+
+            function handleDragStart(event) {
+                console.log("Drag start...");
+                hidden_data = JSON.parse(event.target.querySelector('span').innerHTML.trim());
+                $("#vessel-details-list #" + hidden_data.id).addClass('drag-start');
+                var dragSrcEl = event.target;
+
+                event.dataTransfer.effectAllowed = 'move';
+
+                var item = {
+                    id: hidden_data.id,
+                    type: 'range',
+                    style: 'height:' + hidden_data.loa / 2 + 'px',
+                    content: event.target.querySelector('div').innerHTML,
+                    loa: hidden_data.loa
+                };
+                // set event.target ID with item ID
+                event.target.id =  hidden_data.id;
+
+                checkBerthLOA(hidden_data.loa);
+
+                event.dataTransfer.setData("text", JSON.stringify(item));
+                // Trigger on from the new item dragged when this item drag is finish
+                event.target.addEventListener('dragend', handleDragEnd.bind(this), false);
+            }
+
+            function handleDragEnd(event) {
+                // Last item that just been dragged, its ID is the same of event.target
+                let newItem_dropped = timeline.itemsData.get(event.target.id);
+
+                clearAdditionalClasses();
+
+                if (newItem_dropped == undefined) {
+                    $("#vessel-details-list #" + event.target.id).removeClass('drag-start');
+                } else {
+                    $("#vessel-details-list #" + newItem_dropped.id).remove();
+                    let new_item = vesselArrivalItemSerializer(newItem_dropped);
+                    addToBerthSchedule(new_item);
+                }
+            }
+
+
+            var vitems = document.querySelectorAll('.vessel-detail');
+            for (var i = vitems.length - 1; i >= 0; i--) {
+                var item = vitems[i];
+                item.addEventListener('dragstart', handleDragStart.bind(this), false);
+            }
+
+                     //Check available berths according to the given LOA
+
+
+            function checkBerthLOA(loa) {
+                let tbl = timeline.groupsData._data;
+                console.log('Checking for available berth loa ...');
+                for (key in tbl) {
+                    tb = tbl[key];
+                    if (tb.max_length >= loa)
+                        $('.gp-cl-' + tb.id).addClass('berth-success');
+                    else
+                        $('.gp-cl-' + tb.id).addClass('berth-warning');
+                }
+
+            }
+
+
+            //This function will clear additional classes added to the timeline groups
+            function clearAdditionalClasses() {
+                let tbl = timeline.groupsData._data;
+                for (k in tbl) {
+
+                    $('.gp-cl-' + tbl[k].id).attr('class', 'vis-group' + ' gp-cl-' + tbl[k].id);
+                }
+            }
+
+            $("#publish").click(function () {
+               var ids = timeline.getVisibleItems();
+               var dataItems = [];
+               var tdata = timeline.itemsData._data;
+
+               for (var i=0;i<ids.length;i++){
+                        if (tdata.hasOwnProperty(ids[i])){
+                            dataItem = {};
+                            dataItem.id = tdata[ids[i]].id;
+                            dataItem.start = tdata[ids[i]].start;
+                            dataItems.push(dataItem);
+                        }
+                }
+
+                var sortedVisibleItems = dataItems.sort(function (a, b) {
+                    return a.start > b.start ? 1 : a.start < b.start ? -1 : 1
+                });
+
+               var sorted = sortedVisibleItems.map((item)=>{
+                   return item.id
+               });
+               console.log(sorted);
+
+               publish_schedule = {'to': timeline.getWindow().start, 'from': timeline.getWindow().end, 'csrfmiddlewaretoken':csrftoken, 'berth_plan[]': sorted};
+               console.log({'published schedule': JSON.stringify(publish_schedule)});
+                updateBerthProgramme(publish_schedule);
+            });
+
+
+        });
+
+
+    </script>
+
+{% endblock extra_js %}
